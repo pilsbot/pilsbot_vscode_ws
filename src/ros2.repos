@@ -24,10 +24,6 @@ repositories:
     type: git
     url: https://github.com/pilsbot/MCP23017_i2c_portexpander.git
     version: master
-  pilsbot_simulation:
-    type: git
-    url: https://github.com/pilsbot/pilsbot_simulation.git
-    version: main
   rqt_robot_steering:
     type: git
     url: https://github.com/pilsbot/rqt_robot_steering.git
@@ -36,3 +32,20 @@ repositories:
     type: git
     url: https://github.com/pilsbot/jetson_camera.git
     version: master
+# These are only needed on a Jetson Nano with Ubuntu 18.04
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: foxy-devel
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: foxy
+  ackermann_msgs:
+    type: git
+    url: https://github.com/ros-drivers/ackermann_msgs.git
+    version: ros2
+  realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: foxy-devel
