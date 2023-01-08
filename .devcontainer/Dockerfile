@@ -1,4 +1,8 @@
-FROM althack/ros2:foxy-gazebo 
+FROM althack/ros2:foxy-gazebo
+
+# if you have a nvidia card, add instead type
+# FROM althack/ros2:foxy-gazebo-nvidia
+# to get HW acceleration
 
 # ** [Optional] Uncomment this section to install additional packages. **
 #
