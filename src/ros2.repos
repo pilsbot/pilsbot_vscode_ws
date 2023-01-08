@@ -6,33 +6,33 @@
 repositories:
   pilsbot_hw_ros:
     type: git
-    url: git@github.com:pilsbot/pilsbot_hw_ros.git
+    url: https://github.com/pilsbot/pilsbot_hw_ros.git
     version: foxy-devel
   pilsbot_control:
     type: git
-    url: git@github.com:pilsbot/pils_control.git
+    url: https://github.com/pilsbot/pils_control.git
     version: master
   pilsbot_navigation:
     type: git
-    url: git@github.com:pilsbot/pilsbot_navigation.git
+    url: https://github.com/pilsbot/pilsbot_navigation.git
     version: main
   pilsbot_description:
     type: git
-    url: git@github.com:pilsbot/pilsbot_description.git
+    url: https://github.com/pilsbot/pilsbot_description.git
     version: main
   MCP23017_i2c_portexpander:
     type: git
-    url: git@github.com:pilsbot/MCP23017_i2c_portexpander.git
+    url: https://github.com/pilsbot/MCP23017_i2c_portexpander.git
     version: master
   pilsbot_simulation:
     type: git
-    url: git@github.com:pilsbot/pilsbot_simulation.git
+    url: https://github.com/pilsbot/pilsbot_simulation.git
     version: main
   rqt_robot_steering:
     type: git
-    url: git@github.com:pilsbot/rqt_robot_steering.git
+    url: https://github.com/pilsbot/rqt_robot_steering.git
     version: ros2-ackermann
   jetson_camera:
     type: git
-    url: git@github.com:pilsbot/jetson_camera.git
+    url: https://github.com/pilsbot/jetson_camera.git
     version: master
