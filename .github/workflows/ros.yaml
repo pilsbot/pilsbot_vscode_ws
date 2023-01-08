@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v3
       - 
         uses: uraimo/run-on-arch-action@v2
-        name: Run commands
+        name: Test
         id: runcmd
         with:
           arch: aarch64
@@ -23,19 +23,17 @@ jobs:
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           githubToken: ${{ github.token }}
-      -
-        name: Test
-        run: |
-          docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/Dockerfile .
-          docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
-          bash -c "
-          vcs import --recursive --skip-existing < src/ros2.repos src \
-          && apt-get update \
-          && rosdep update \
-          && rosdep install --from-paths src --ignore-src -y --rosdistro=foxy \
-          && colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release' -Wall -Wextra -Wpedantic \
-          && colcon test \
-          "
+          run: |
+            docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/Dockerfile .
+            docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
+            bash -c "
+            vcs import --recursive --skip-existing < src/ros2.repos src \
+            && apt-get update \
+            && rosdep update \
+            && rosdep install --from-paths src --ignore-src -y --rosdistro=foxy \
+            && colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release' -Wall -Wextra -Wpedantic \
+            && colcon test \
+            "
   lint:
     name: ament_${{ matrix.linter }}
     runs-on: ubuntu-latest
@@ -49,7 +47,7 @@ jobs:
         uses: actions/checkout@v3
       - 
         uses: uraimo/run-on-arch-action@v2
-        name: Run commands
+        name: Run linter
         id: runcmd
         with:
           arch: aarch64
@@ -58,12 +56,10 @@ jobs:
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           githubToken: ${{ github.token }}
-      -
-        name: Run linter
-        run: |
-          docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/Dockerfile .
-          docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
-          bash -c "
-          vcs import --recursive --skip-existing < src/ros2.repos src \
-          && ament_${{ matrix.linter }} src/
-          "
+          run: |
+            docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/Dockerfile .
+            docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
+            bash -c "
+            vcs import --recursive --skip-existing < src/ros2.repos src \
+            && ament_${{ matrix.linter }} src/
+            "
