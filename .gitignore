@@ -2,3 +2,4 @@ build/*
 install/*
 log/*
 site/*
+.devcontainer/jetson_multimedia_api

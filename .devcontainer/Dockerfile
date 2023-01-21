@@ -64,4 +64,11 @@ ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 # Set up auto-source of workspace for ros user
 ARG WORKSPACE
-RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
+
+RUN mkdir -p /usr/src/jetson_multimedia_api
+ADD jetson_multimedia_api /usr/src/jetson_multimedia_api
+
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
+
+RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /root/.bashrc
