@@ -1,6 +1,6 @@
 # List of repositories to use within your workspace
 # See https://github.com/dirk-thomas/vcstool
-############ 
+############
 # All Pilsbot related repositories:
 ############
 repositories:
@@ -36,3 +36,7 @@ repositories:
     type: git
     url: https://github.com/pilsbot/jetson_camera.git
     version: master
+  luxonis/depthai-ros:
+    type: git
+    url: https://github.com/luxonis/depthai-ros.git
+    version: foxy
