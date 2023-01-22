@@ -32,10 +32,12 @@
 		"ms-iot.vscode-ros",
 		"ms-python.python",
 		"ms-vscode.cpptools",
+		"ms-vscode.cpptools-extension-pack",
 		"redhat.vscode-yaml",
 		"smilerobotics.urdf",
 		"streetsidesoftware.code-spell-checker",
 		"twxs.cmake",
-		"yzhang.markdown-all-in-one"
+		"yzhang.markdown-all-in-one",
+		"eamodio.gitlens"
 	]
 }
