@@ -1,40 +1,10 @@
-# VSCode ROS2 Workspace Template
+# Pilsbot ROS2 Workspace
 
-This template will get you set up using ROS2 with VSCode as your IDE.
+This repository contains a preconfigured workspace for development of the Pilsbot platform. The branch `foxy` includes all needed packages for desktop development and simulation. The branch `foxy-jetson` contains everything needed on the real hardware platform. Hence, it slightly differs from the main branch, since the custom build does currently not include any binary packages. 
 
-See [how I develop with vscode and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html) for a more in-depth look on how to use this workspace.
+In the future this might be fused into one branch, but this is currently not possible because the Jetson Nano officially doesn't support anything newer than Ubuntu 18.04.
 
-## Features
-
-### Style
-
-ROS2-approved formatters are included in the IDE.  
-
-* **c++** uncrustify; config from `ament_uncrustify`
-* **python** autopep8; vscode settings consistent with the [style guide](https://index.ros.org/doc/ros2/Contributing/Code-Style-Language-Versions/)
-
-### Tasks
-
-There are many pre-defined tasks, see [`.vscode/tasks.json`](.vscode/tasks.json) for a complete listing.  Feel free to adjust them to suit your needs.  
-
-Take a look at [how I develop using tasks](https://www.allisonthackston.com/articles/vscode_tasks.html) for an idea on how I use tasks in my development.
-
-### Debugging
-
-This template sets up debugging for python files and gdb for cpp programs.  See [`.vscode/launch.json`](.vscode/launch.json) for configuration details.
-
-### Continuous Integration
-
-The template also comes with basic continuous integration set up. See [`.github/workflows/ros.yaml`](/.github/workflows/ros.yaml).  
-
-To remove a linter just delete it's name from this line:
-
-```yaml
-      matrix:
-          linter: [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8, pep257]
-```
-
-## How to use this template
+## How to use this workspace
 
 ### Prerequisites
 
@@ -44,27 +14,19 @@ You should already have Docker and VSCode with the remote containers plugin inst
 * [vscode](https://code.visualstudio.com/)
 * [vscode remote containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-### Get the template
-
-Click on "use this template"
-
-![template_use](https://user-images.githubusercontent.com/6098197/91331899-43f23b80-e780-11ea-92c8-b4665ce126f1.png)
-
-### Create your repository
-
-On the next dialog, name the repository you would like to start and decide if you want all of the branches, or just the latest LTS: Foxy.
-
-![template_new](https://user-images.githubusercontent.com/6098197/91332035-713ee980-e780-11ea-81d3-13b170f568b0.png)
-
-Github will then create a new repository with the contents of this one in your account.  It grabs the latest changes as "initial commit".
-
-### Clone your repo
-
-Now you can clone your repo as normal
-
-![template_download](https://user-images.githubusercontent.com/6098197/91332342-e4e0f680-e780-11ea-9525-49b0afa0e4bb.png)
-
 ### Open it in vscode
+
+Clone the repository to a folder of your choice with
+
+```
+git clone https://github.com/pilsbot/pilsbot_vscode_ws.git
+```
+
+or via ssh
+
+```
+git clone git@github.com:pilsbot/pilsbot_vscode_ws.git
+```
 
 Now that you've cloned your repo onto your computer, you can open it in VSCode (File->Open Folder). 
 
@@ -83,9 +45,26 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 ![template_container](https://user-images.githubusercontent.com/6098197/91332895-adbf1500-e781-11ea-8afc-7a22a5340d4a.png)
 
 
-### Update the template with your code
+### Setup the workspace
 
-1. Specify the repositories you want to include in your workspace in `src/ros2.repos` or delete `src/ros2.repos` and develop directly within the workspace.
-   1. If you are using a `ros2.repos` file, import the contents `Terminal->Run Task..->import from workspace file`
+1. Specify the repositories you want to include in your workspace in `src/ros2.repos`.
+   import the contents `Terminal->Run Task..->import from workspace file`
 2. Install dependencies `Terminal->Run Task..->install dependencies`
-3. Develop!
+3. Run the build task with `Ctrl+Shift+B`
+
+### Launch the simulation
+
+To test a successfull configuarion and build of the workspace you can start the Pilsbot
+simulation. You have to options to do so.
+
+1. Open a terminal in your workspace and type: `ros2 launch pilsbot_simulation pilsbot.launch.py`
+2. Press `Ctrl+Shift+P` search for `ROS: Run a ROS launch file (roslaunch)`, type the package name `pilsbot_simulation`, choose a launch file e.g. `pilsbot.launch.py` and press `Enter` again to skip defining additional launch arguments.
+
+Congratulations, you now have a setup workspace to develop on the Pilsbot platform! 🎉
+
+If any issues occur during the setup process, do not hesitate to open an issue, so we can
+fix the problem as soon as possible.
+
+## Good to know
+
+- all packages added to the workspace should use `https`. If you have a Github account logged in your VSCode installation, you can easily push without the need for password authentication. You will be asked to acknowledge your login once via your browser and you're good to go.
