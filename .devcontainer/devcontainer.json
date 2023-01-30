@@ -13,9 +13,10 @@
 		"--security-opt=seccomp:unconfined",
 		"--security-opt=apparmor:unconfined",
 		"--volume=/tmp/.X11-unix:/tmp/.X11-unix",
-		"--volume=/dev:/dev",
-		"--privileged",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
+		"--volume=/dev:/dev",
+		"--volume=/media/sda/bags:/workspaces/bags",
+		"--privileged",
 		"--gpus=all"
 	],
 	"containerEnv": { "DISPLAY": "${localEnv:DISPLAY}" },
