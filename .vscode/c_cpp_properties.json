@@ -4,14 +4,20 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/opt/ros/foxy/include/**"
+                "/opt/ros/foxy/install/include/**",
+                "/workspaces/addon_ws/install/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "cStandard": "c99",
             "cppStandard": "c++14",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "linux-gcc-arm64",
+            "browse": {
+                "path": [
+                    "/workspaces/addon_ws/install/include"
+                ]
+            }
         }
     ],
     "version": 4
