@@ -40,3 +40,11 @@ repositories:
     type: git
     url: https://github.com/luxonis/depthai-ros.git
     version: foxy
+  pilsbot_gnss_receiver:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_gnss_receiver.git
+    version: main
+  nmea_navsat_driver:
+    type: git
+    url: https://github.com/ros-drivers/nmea_navsat_driver
+    version: ros2
