@@ -1,6 +1,6 @@
 # List of repositories to use within your workspace
 # See https://github.com/dirk-thomas/vcstool
-############ 
+############
 # All Pilsbot related repositories:
 ############
 repositories:
@@ -49,4 +49,11 @@ repositories:
     type: git
     url: https://github.com/ros-controls/realtime_tools.git
     version: foxy-devel
-    
+  pilsbot_gnss_receiver:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_gnss_receiver.git
+    version: main
+  nmea_navsat_driver:
+    type: git
+    url: https://github.com/ros-drivers/nmea_navsat_driver
+    version: ros2
