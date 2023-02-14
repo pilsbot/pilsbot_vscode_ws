@@ -17,6 +17,7 @@ FROM althack/ros2:foxy-gazebo-nvidia
 # ENV DEBIAN_FRONTEND=dialog
 
 RUN pip3 install transforms3d # seems to be missing from nmea_navsat_driver dependencies?
+RUN usermod -a -G video,dialout,plugdev ros # for using dialout/ttys
 
 # Set up auto-source of workspace for ros user
 ARG WORKSPACE
