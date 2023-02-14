@@ -1,7 +1,7 @@
-FROM althack/ros2:foxy-gazebo
+#FROM althack/ros2:foxy-gazebo
 
 # if you have a nvidia card, add instead type
-# FROM althack/ros2:foxy-gazebo-nvidia
+FROM althack/ros2:foxy-gazebo-nvidia
 # to get HW acceleration
 
 # ** [Optional] Uncomment this section to install additional packages. **
@@ -15,6 +15,8 @@ FROM althack/ros2:foxy-gazebo
 #    && apt-get clean -y \
 #    && rm -rf /var/lib/apt/lists/*
 # ENV DEBIAN_FRONTEND=dialog
+
+RUN pip3 install transforms3d # seems to be missing from nmea_navsat_driver dependencies?
 
 # Set up auto-source of workspace for ros user
 ARG WORKSPACE
