@@ -55,7 +55,7 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 ### Launch the simulation
 
 To test a successfull configuarion and build of the workspace you can start the Pilsbot
-simulation. You have to options to do so.
+simulation. You have two options to do so.
 
 1. Open a terminal in your workspace and type: `ros2 launch pilsbot_simulation pilsbot.launch.py`
 2. Press `Ctrl+Shift+P` search for `ROS: Run a ROS launch file (roslaunch)`, type the package name `pilsbot_simulation`, choose a launch file e.g. `pilsbot.launch.py` and press `Enter` again to skip defining additional launch arguments.
