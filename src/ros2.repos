@@ -49,18 +49,8 @@ repositories:
     url: https://github.com/pilsbot/pilsbot_bringup
     version: foxy-devel
 
-
-
 ### TODO: Should be in base image
-  joystick_drivers:
-    type: git
-    url: https://github.com/ros-drivers/joystick_drivers.git
-    version: foxy-devel
-  teleop_twist_joy:
-    type: git
-    url: https://github.com/ros2/teleop_twist_joy.git
-    version: foxy
   tf_transformations:
     type: git
-    url: https://github.com/DLu/tf_transformation.git
+    url: https://github.com/DLu/tf_transformations.git
     version: main
