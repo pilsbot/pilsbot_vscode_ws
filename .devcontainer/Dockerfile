@@ -16,4 +16,9 @@ ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 
 RUN sudo usermod -a -G video,i2c,dialout,plugdev,rdma ros
 
+RUN sudo apt update && sudo apt install --no-recommends -y python3-serial \
+     && rm -rf /var/lib/apt/lists/*
+
+RUN sudo -H pip3 install transforms3d
+
 RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
