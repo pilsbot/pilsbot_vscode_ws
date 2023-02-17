@@ -9,7 +9,7 @@
             "detail": "Build workspace (default)",
             "type": "shell",
             // -DBUILD_TESTING=0 because test of joint_state_broadcaster are broken in branch foxy
-            "command": "colcon build --merge-install --symlink-install --cmake-args '-DCMAKE_BUILD_TYPE=RelWithDebInfo' '-DCMAKE_EXPORT_COMPILE_COMMANDS=On' -Wall -Wextra -Wpedantic -DBUILD_TESTING=0",
+            "command": "colcon build --merge-install --symlink-install --cmake-args '-DCMAKE_BUILD_TYPE=RelWithDebInfo' '-DCMAKE_EXPORT_COMPILE_COMMANDS=On' -Wall -Wextra -Wpedantic -DBUILD_TESTING=0 --packages-skip joint_trajectory_controller",
             "group": {
                 "kind": "build",
                 "isDefault": true
