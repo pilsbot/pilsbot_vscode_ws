@@ -39,7 +39,7 @@
             "label": "clean",
             "detail": "Run the clean target",
             "type": "shell",
-            "command": "colcon build --cmake-target clean",
+            "command": "colcon build --merge-install --symlink-install  --cmake-target clean",
             "problemMatcher": "$gcc"
         },
         {
