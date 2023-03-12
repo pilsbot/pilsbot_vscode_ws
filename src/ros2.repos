@@ -48,3 +48,11 @@ repositories:
     type: git
     url: https://github.com/ros-drivers/nmea_navsat_driver
     version: ros2
+  pilsbot_depthai:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_depthai.git
+    version: foxy-devel
+  citysim:
+    type: git
+    url: https://github.com/pilsbot/citysim.git
+    version: master
