@@ -16,7 +16,14 @@
 		"--volume=/dev:/dev",
 		"--privileged"
 	],
-	"containerEnv": { "DISPLAY": "${localEnv:DISPLAY}" },
+	"containerEnv": {
+            "DISPLAY": "${localEnv:DISPLAY}", // Needed for GUI try ":0" for windows
+            "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+            "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+            "PULSE_SERVER": "${localEnv:PULSE_SERVER}",
+            "LIBGL_ALWAYS_SOFTWARE": "1", // Needed for software rendering of opengl
+            "MODEL_PATH": "/models" //Dir with model weights
+	},
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"terminal.integrated.profiles.linux": {
@@ -39,6 +46,7 @@
 		"streetsidesoftware.code-spell-checker",
 		"twxs.cmake",
 		"yzhang.markdown-all-in-one",
-		"eamodio.gitlens"
+		"eamodio.gitlens",
+		"althack.ament-task-provider",
 	]
 }
