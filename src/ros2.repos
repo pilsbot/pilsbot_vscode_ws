@@ -60,3 +60,8 @@ repositories:
     type: git
     url: https://github.com/pilsbot/pilsbot_bringup.git
     version: foxy-devel
+  # Fix to block python2 legacy numpy install
+  tf_transformations:
+    type: git
+    url: https://github.com/DLu/tf_transformations.git
+    version: e717f2a284363858a0d6497a2c8fa29cf5514154
