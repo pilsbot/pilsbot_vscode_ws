@@ -16,29 +16,38 @@
 		"--volume=/dev:/dev",
 		"--privileged"
 	],
-	"containerEnv": { "DISPLAY": "${localEnv:DISPLAY}" },
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"terminal.integrated.profiles.linux": {
-			"bash": {
-				"path": "bash"
-			},
-		},
-		"terminal.integrated.defaultProfile.linux": "bash"
+	"containerEnv": {
+            "DISPLAY": "${localEnv:DISPLAY}", // Needed for GUI try ":0" for windows
+            "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+            "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+            "PULSE_SERVER": "${localEnv:PULSE_SERVER}",
+            "LIBGL_ALWAYS_SOFTWARE": "1" // Needed for software rendering of opengl
 	},
-	"extensions": [
-		"dotjoshjohnson.xml",
-		"zachflower.uncrustify",
-		"ms-azuretools.vscode-docker",
-		"ms-iot.vscode-ros",
-		"ms-python.python",
-		"ms-vscode.cpptools",
-		"ms-vscode.cpptools-extension-pack",
-		"redhat.vscode-yaml",
-		"smilerobotics.urdf",
-		"streetsidesoftware.code-spell-checker",
-		"twxs.cmake",
-		"yzhang.markdown-all-in-one",
-		"eamodio.gitlens"
-	]
+	// Set *default* container specific settings.json values on container create.
+	"customizations": {
+		"settings": {
+			"terminal.integrated.profiles.linux": {
+				"bash": {
+					"path": "bash"
+				},
+			},
+			"terminal.integrated.defaultProfile.linux": "bash"
+		},
+		"extensions": [
+			"dotjoshjohnson.xml",
+			"zachflower.uncrustify",
+			"ms-azuretools.vscode-docker",
+			"ms-iot.vscode-ros",
+			"ms-python.python",
+			"ms-vscode.cpptools",
+			"ms-vscode.cpptools-extension-pack",
+			"redhat.vscode-yaml",
+			"smilerobotics.urdf",
+			"streetsidesoftware.code-spell-checker",
+			"twxs.cmake",
+			"yzhang.markdown-all-in-one",
+			"eamodio.gitlens",
+			"althack.ament-task-provider",
+		]
+	}
 }
