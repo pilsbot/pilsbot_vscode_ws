@@ -51,6 +51,12 @@
         }
       ]
     },
+    {
+      "name": "Debug Dualshock driver",
+      "type": "ros",
+      "request": "launch",
+      "target": "${workspaceFolder}/install/share/ds4_driver/launch/ds4_driver.launch.xml"
+    }
   ],
   "inputs": [
     {
