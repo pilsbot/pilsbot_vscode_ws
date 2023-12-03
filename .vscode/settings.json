@@ -1,12 +1,13 @@
 {
-    "editor.tabSize": 8,
+    "editor.tabSize": 4,
     "editor.rulers": [
         100
     ],
     "files.associations": {
         "*.repos": "yaml",
         "*.world": "xml",
-        "*.xacro": "xml"
+        "*.xacro": "xml",
+        "thread": "cpp"
     },
     "python.analysis.extraPaths": [
         "/opt/ros/foxy/lib/python3.8/site-packages/"
