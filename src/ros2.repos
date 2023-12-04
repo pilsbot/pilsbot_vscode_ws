@@ -73,3 +73,7 @@ repositories:
     type: git
     url: https://github.com/pilsbot/ds4_driver.git
     version: humble-devel
+  ackermann_msgs:
+    type: git
+    url: https://github.com/ros-drivers/ackermann_msgs/tree/ros2
+    version: ros2
