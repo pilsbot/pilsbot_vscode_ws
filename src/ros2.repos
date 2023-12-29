@@ -48,6 +48,10 @@ repositories:
     type: git
     url: https://github.com/pilsbot/pilsbot_bringup
     version: foxy-devel
+  ds4_driver:
+    type: git
+    url: https://github.com/naoki-mizuno/ds4_driver.git
+    version: foxy-devel
 
 ### TODO: Should be in base image
   tf_transformations:
