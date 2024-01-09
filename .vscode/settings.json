@@ -6,7 +6,8 @@
     "files.associations": {
         "*.repos": "yaml",
         "*.world": "xml",
-        "*.xacro": "xml"
+        "*.xacro": "xml",
+        "type_traits": "cpp"
     },
     "python.analysis.extraPaths": [
         "/opt/ros/foxy/install/lib/python3.6/site-packages/"
@@ -70,5 +71,6 @@
         ".vscode-insiders",
         ".devcontainer/devcontainer.json"
     ],
-    "cmake.configureOnOpen": false,
+"cmake.configureOnOpen": false,
+"C_Cpp.default.compilerPath": "",
 }
