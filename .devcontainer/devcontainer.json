@@ -15,7 +15,7 @@
 		"--volume=/tmp/.X11-unix:/tmp/.X11-unix",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
 		"--volume=/dev:/dev",
-		"--volume=/media/sda/bags:/workspaces/bags",
+		"--volume=/media/externSSD/bags:/workspaces/bags",
 		"--privileged",
 		"--gpus=all"
 	],
