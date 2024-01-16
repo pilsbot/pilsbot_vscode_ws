@@ -23,8 +23,8 @@
     "python.formatting.autopep8Args": [
         "--max-line-length=100"
     ],
-    "C_Cpp.default.intelliSenseMode": "clang-x64",
-    "C_Cpp.formatting": "Disabled",
+    "C_Cpp.default.intelliSenseMode": "", //"clang-x64",
+    "C_Cpp.formatting": "clangFormat",
     "uncrustify.configPath.linux": "/opt/ros/foxy/install/lib/python3.6/site-packages/ament_uncrustify/configuration/ament_code_style.cfg",
     "[cpp]": {
         "editor.defaultFormatter": "zachflower.uncrustify"

@@ -52,9 +52,17 @@ repositories:
     type: git
     url: https://github.com/naoki-mizuno/ds4_driver.git
     version: foxy-devel
+  teleop_acker_joy:
+    type: git
+    url: https://github.com/pilsbot/teleop_acker_joy.git
+    version: foxy
 
 ### TODO: Should be in base image
   tf_transformations:
     type: git
     url: https://github.com/DLu/tf_transformations.git
     version: main
+  depthai-ros:
+    type: git
+    url: https://github.com/luxonis/depthai-ros.git
+    version: foxy
