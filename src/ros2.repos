@@ -77,3 +77,7 @@ repositories:
     type: git
     url: https://github.com/ros-drivers/ackermann_msgs/tree/ros2
     version: ros2
+  teleop_acker_joy:
+    type: git
+    url: https://github.com/pilsbot/teleop_acker_joy
+    version: foxy
