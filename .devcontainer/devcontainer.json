@@ -15,6 +15,7 @@
 		"--volume=/tmp/.X11-unix:/tmp/.X11-unix",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
 		"--volume=/dev:/dev",
+                // Un-comment if you have the logging-ssd back
 		"--volume=/media/externSSD/bags:/workspaces/bags",
 		"--privileged",
 		"--gpus=all"
