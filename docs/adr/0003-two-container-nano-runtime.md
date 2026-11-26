@@ -2,7 +2,7 @@
 
 The Nano is limited to L4T r32 (Ubuntu 18.04). The only Humble images that keep Jetson's hardware (GStreamer `nvjpegdec`/`nvv4l2decoder`, CUDA, TensorRT) are dusty-nv's `dustynv/ros:humble-*-l4t-r32.7.1`. They build ROS from source with gcc-8 and Python 3.6, and `apt install ros-humble-*` does not work in them. The official `ros:humble` (22.04) arm64 image has every binary package but no access to Jetson hardware. We use both:
 
-- **Camera container** (dustynv L4T): owns the OAK and its hardware-accelerated decoding. Only this container builds depthai from source.
+- **Camera container** (dustynv L4T): owns the OAK and its hardware-accelerated decoding, and the CSI camera (`jetson_camera`), which needs Jetson Argus. Only this container builds depthai from source.
 - **Stack container** (official `ros:humble`): ros2_control, the controllers, the driver, teleop, GNSS, localisation, navigation, foxglove_bridge, and recording, all from apt.
 
 Both use CycloneDDS (`RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`) with `--network=host --ipc=host`.
