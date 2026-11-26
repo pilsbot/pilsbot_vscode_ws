@@ -12,6 +12,10 @@ Both use CycloneDDS (`RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`) with `--network=ho
 - Everything in the dustynv container: rejected. ros2_control, Nav2, and rtabmap would all need source builds on gcc-8 and Python 3.6, and nav2 and rtabmap have no confirmed working build there.
 - Everything in the official image: rejected. It loses the hardware decoding the camera driver depends on to stay fast.
 
+## Transition
+
+The camera container stays on the existing, proven Foxy image (`pilsbot/foxy-jetson`, L4T, CycloneDDS) while the stack container moves to Humble. Foxy and Humble interoperate over DDS for the camera's message types. A Humble desktop on FastDDS received the Foxy camera streams at full rate (2026-11-26, see ADR 0004). Moving the camera container to the dustynv Humble image is a separate, later step and does not block the Humble port of the rest of the stack.
+
 ## Consequences
 
 - Full-resolution decoded frames are expensive to send between processes. Consumers of them should live in the camera container, ideally in the same process, unless measurements show the DDS copy is acceptable.

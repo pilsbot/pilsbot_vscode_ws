@@ -20,12 +20,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=dialog
 
-# The NVIDIA GStreamer elements (nvjpegdec, nvv4l2decoder, nvvidconv) are expected to be
-# mounted from the host by the nvidia runtime on L4T r32. Check with:
-#   gst-inspect-1.0 nvjpegdec && gst-inspect-1.0 nvv4l2decoder
-#
-# TODO(camera-container): the Foxy image also copied the host's jetson_multimedia_api into
-# /usr/src/jetson_multimedia_api. Check whether mjpeg_node still needs it and script it here.
+# The NVIDIA GStreamer elements (nvv4l2decoder, nvjpegdec, nvvidconv) come from the host via
+# --runtime=nvidia (verified on the robot's Foxy container). jetson_multimedia_api is not needed.
 # TODO(camera-container): build luxonis/depthai-core from source (see src/jetson-camera.repos)
 # with CC=gcc-8 CXX=g++-8 before building depthai-ros.
 
