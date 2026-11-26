@@ -1,0 +1,37 @@
+// Nano stack container. Setup inside: ./setup.sh src/ros2.repos && ./build.sh
+{
+	"name": "Pilsbot Nano stack (Humble, official image)",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"WORKSPACE": "${containerWorkspaceFolder}"
+		}
+	},
+	"remoteUser": "ros",
+	"runArgs": [
+		"--network=host",
+		"--ipc=host",
+		"--cap-add=SYS_PTRACE",
+		// JetPack 4.6's Docker lacks clone3 in its seccomp profile, which breaks 22.04 images
+		"--security-opt=seccomp:unconfined",
+		"--security-opt=apparmor:unconfined",
+		"--volume=/dev:/dev",
+		"--volume=/media/externSSD/bags:/workspaces/bags",
+		"--privileged"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"althack.ament-task-provider",
+				"ms-python.python",
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools",
+				"Ranch-Hand-Robotics.rde-ros-2",
+				"redhat.vscode-yaml"
+			]
+		}
+	}
+}

@@ -1,8 +1,16 @@
 # Pilsbot ROS2 Workspace
 
-This repository contains a preconfigured workspace for development of the Pilsbot platform. The branch `foxy` includes all needed packages for desktop development and simulation. The branch `foxy-jetson` contains everything needed on the real hardware platform. Hence, it slightly differs from the main branch, since the custom build does currently not include any binary packages. 
+This repository contains a preconfigured workspace for development of the Pilsbot platform. The branch `humble` is the primary development line. The branch `foxy` is the maintained legacy line, which receives backports of substantial improvements (see [docs/adr](docs/adr)).
 
-In the future this might be fused into one branch, but this is currently not possible because the Jetson Nano officially doesn't support anything newer than Ubuntu 18.04.
+One branch serves every target. The targets differ only in which repos files they import and which devcontainer they use:
+
+| Target | Devcontainer | Repos files |
+|---|---|---|
+| Desktop development and simulation | `.devcontainer/desktop` | `src/ros2.repos`, `src/desktop.repos` (default) |
+| Jetson Nano, everything except the camera | `.devcontainer/jetson-stack` | `src/ros2.repos` |
+| Jetson Nano, OAK camera with hardware decoding | `.devcontainer/jetson-camera` | `src/jetson-camera.repos` |
+
+The Nano runs two containers side by side; see [ADR 0003](docs/adr/0003-two-container-nano-runtime.md). Project vocabulary lives in [GLOSSARY.md](GLOSSARY.md).
 
 ## How to use this workspace
 
@@ -12,7 +20,7 @@ You should already have Docker and VSCode with the remote containers plugin inst
 
 * [docker](https://docs.docker.com/engine/install/)
 * [vscode](https://code.visualstudio.com/)
-* [vscode remote containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+* [vscode dev containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 ### Open it in vscode
 
@@ -38,7 +46,7 @@ If you don't see the pop-up, click on the little green square in the bottom left
 
 ![template_vscode_bottom](https://user-images.githubusercontent.com/6098197/91332638-5d47b780-e781-11ea-9fb6-4d134dbfc464.png)
 
-In the dialog, select "Remote Containers: Reopen in container"
+In the dialog, select "Dev Containers: Reopen in Container" and pick the configuration for your target
 
 VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open a terminal inside VSCode (Terminal->New Terminal), you should see that your username has been changed to `ros`, and the bottom left green corner should say "Dev Container"
 
@@ -47,10 +55,8 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 
 ### Setup the workspace
 
-1. Specify the repositories you want to include in your workspace in `src/ros2.repos`.
-   import the contents `Terminal->Run Task..->import from workspace file`
-2. Install dependencies `Terminal->Run Task..->install dependencies`
-3. Run the build task with `Ctrl+Shift+B`
+1. Import the sources and install their dependencies with `./setup.sh` (desktop default), or pass the repos files for your target, e.g. `./setup.sh src/ros2.repos`. The tasks `Terminal->Run Task..->setup` and `import from workspace file` do the same.
+2. Run the build task with `Ctrl+Shift+B`, or `./build.sh`. Set `BUILD_TYPE` to override the default `RelWithDebInfo`.
 
 ### Launch the simulation
 

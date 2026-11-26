@@ -1,8 +1,12 @@
-# List of repositories to use within your workspace
-# See https://github.com/dirk-thomas/vcstool
-############
-# All Pilsbot related repositories:
-############
+# Common Pilsbot sources: needed on the desktop and in the Nano's stack container.
+# See https://github.com/dirk-thomas/vcstool and docs/adr/0003-two-container-nano-runtime.md
+#
+# Third-party packages with Humble binaries are NOT listed here; rosdep installs them:
+#   ackermann_msgs, nmea_navsat_driver, tf_transformations, depthai_descriptions,
+#   joy, ros2_control / ros2_controllers, foxglove_bridge, ...
+#
+# TODO(branching): switch own repos to `version: humble` once those branches exist
+# (docs/adr/0001-humble-primary-foxy-backports.md).
 repositories:
   pilsbot_hw_ros:
     type: git
@@ -24,47 +28,19 @@ repositories:
     type: git
     url: https://github.com/pilsbot/MCP23017_i2c_portexpander.git
     version: master
-  pilsbot_simulation:
-    type: git
-    url: https://github.com/pilsbot/pilsbot_simulation.git
-    version: main
-  rqt_robot_steering:
-    type: git
-    url: https://github.com/pilsbot/rqt_robot_steering.git
-    version: ros2-ackermann
-  jetson_camera:
-    type: git
-    url: https://github.com/pilsbot/jetson_camera.git
-    version: master
-  luxonis/depthai-ros:
-    type: git
-    url: https://github.com/luxonis/depthai-ros.git
-    version: foxy
   pilsbot_gnss_receiver:
     type: git
     url: https://github.com/pilsbot/pilsbot_gnss_receiver.git
     version: main
-  nmea_navsat_driver:
-    type: git
-    url: https://github.com/ros-drivers/nmea_navsat_driver
-    version: ros2
-  pilsbot_depthai:
-    type: git
-    url: https://github.com/pilsbot/pilsbot_depthai.git
-    version: foxy-devel
-  citysim:
-    type: git
-    url: https://github.com/pilsbot/citysim.git
-    version: master
   pilsbot_bringup:
     type: git
     url: https://github.com/pilsbot/pilsbot_bringup.git
     version: foxy-devel
-  # Fix to block python2 legacy numpy install
-  tf_transformations:
+  teleop_acker_joy:
     type: git
-    url: https://github.com/DLu/tf_transformations.git
-    version: e717f2a284363858a0d6497a2c8fa29cf5514154
+    url: https://github.com/pilsbot/teleop_acker_joy.git
+    version: foxy
+  # Third-party forks without Humble binaries
   ds4drv:
     type: git
     url: https://github.com/pilsbot/ds4drv.git
@@ -73,11 +49,3 @@ repositories:
     type: git
     url: https://github.com/pilsbot/ds4_driver.git
     version: humble-devel
-  ackermann_msgs:
-    type: git
-    url: https://github.com/ros-drivers/ackermann_msgs/tree/ros2
-    version: ros2
-  teleop_acker_joy:
-    type: git
-    url: https://github.com/pilsbot/teleop_acker_joy
-    version: foxy

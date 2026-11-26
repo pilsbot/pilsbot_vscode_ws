@@ -1,0 +1,19 @@
+# Desktop-only Pilsbot sources: simulation, desktop tools, and the camera node
+# (the desktop gets depthai from Humble binaries via rosdep and falls back to software decoding).
+repositories:
+  pilsbot_simulation:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_simulation.git
+    version: main
+  citysim:
+    type: git
+    url: https://github.com/pilsbot/citysim.git
+    version: master
+  rqt_robot_steering:
+    type: git
+    url: https://github.com/pilsbot/rqt_robot_steering.git
+    version: ros2-ackermann
+  pilsbot_depthai:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_depthai.git
+    version: foxy-devel

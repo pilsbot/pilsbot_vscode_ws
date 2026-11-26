@@ -205,7 +205,7 @@
             "label": "import from workspace file",
             "detail": "Use vcs to import modules specified by a workspace/rosinstall file.",
             "type": "shell",
-            "command": "vcs import --recursive < src/ros2.repos src",
+            "command": "./setup.sh --no-deps",
             "problemMatcher": []
         },
         {
@@ -219,7 +219,7 @@
             "label": "install dependencies",
             "detail": "Install all dependencies specified in the workspaces package.xml files.",
             "type": "shell",
-            "command": "sudo apt-get update && rosdep --rosdistro=foxy update && rosdep install --rosdistro=foxy --from-paths src --ignore-src -y",
+            "command": "sudo apt-get update && rosdep update && rosdep install --from-paths src --ignore-src -y",
             "problemMatcher": []
         },
         {

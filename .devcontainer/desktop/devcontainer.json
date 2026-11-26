@@ -1,20 +1,19 @@
-// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+// See https://containers.dev/implementors/json_reference/ for format details.
 {
+	"name": "Pilsbot desktop (Humble + Gazebo)",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"WORKSPACE": "${containerWorkspaceFolder}",
-			"--network": "host"
+			"WORKSPACE": "${containerWorkspaceFolder}"
 		},
 		"options": [
 			"--network=host"
-		],
+		]
 	},
 	"remoteUser": "ros",
 
 	// if you have problems running rviz / display apps under wayland,
 	// call `xhost + local:`
-
 	"runArgs": [
 		"--network=host",
 		"--cap-add=SYS_PTRACE",
@@ -26,37 +25,36 @@
 		"--privileged"
 	],
 	"containerEnv": {
-            "DISPLAY": "${localEnv:DISPLAY}", // Needed for GUI try ":0" for windows
-            "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
-            "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
-            "PULSE_SERVER": "${localEnv:PULSE_SERVER}",
-            "LIBGL_ALWAYS_SOFTWARE": "1" // Needed for software rendering of opengl
+		"DISPLAY": "${localEnv:DISPLAY}", // Needed for GUI try ":0" for windows
+		"WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+		"XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+		"PULSE_SERVER": "${localEnv:PULSE_SERVER}",
+		"LIBGL_ALWAYS_SOFTWARE": "1" // Needed for software rendering of opengl
 	},
-	// Set *default* container specific settings.json values on container create.
 	"customizations": {
-		"settings": {
-			"terminal.integrated.profiles.linux": {
-				"bash": {
-					"path": "bash"
+		"vscode": {
+			"settings": {
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+						"path": "bash"
+					}
 				},
+				"terminal.integrated.defaultProfile.linux": "bash"
 			},
-			"terminal.integrated.defaultProfile.linux": "bash"
-		},
-		"extensions": [
-			"dotjoshjohnson.xml",
-			"zachflower.uncrustify",
-			"ms-azuretools.vscode-docker",
-			"ms-iot.vscode-ros",
-			"ms-python.python",
-			"ms-vscode.cpptools",
-			"ms-vscode.cpptools-extension-pack",
-			"redhat.vscode-yaml",
-			"smilerobotics.urdf",
-			"streetsidesoftware.code-spell-checker",
-			"twxs.cmake",
-			"yzhang.markdown-all-in-one",
-			"eamodio.gitlens",
-			"althack.ament-task-provider",
-		]
+			"extensions": [
+				"althack.ament-task-provider",
+				"eamodio.gitlens",
+				"ms-azuretools.vscode-containers",
+				"ms-python.python",
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools-extension-pack",
+				"Ranch-Hand-Robotics.rde-pack",
+				"redhat.vscode-xml",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"yzhang.markdown-all-in-one",
+				"zachflower.uncrustify"
+			]
+		}
 	}
 }

@@ -1,0 +1,20 @@
+# Sources for the Nano's camera container (dustynv/ros:humble-*-l4t-r32.7.1).
+# Nothing can be apt-installed there (Ubuntu 18.04), so depthai comes from source.
+# See docs/adr/0003-two-container-nano-runtime.md and docs/adr/0004-own-oak-driver-with-hardware-decoding.md
+#
+# TODO(camera-container): add luxonis/depthai-core pinned to the release that
+# depthai-ros 2.11.x was built against. It is not pinned in depthai-ros itself, so
+# verify it before adding it rather than guessing.
+repositories:
+  pilsbot_depthai:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_depthai.git
+    version: feature/h265-encoded-transport
+  jetson_camera:
+    type: git
+    url: https://github.com/pilsbot/jetson_camera.git
+    version: master
+  luxonis/depthai-ros:
+    type: git
+    url: https://github.com/luxonis/depthai-ros.git
+    version: humble

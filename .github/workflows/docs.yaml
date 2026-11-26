@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "foxy"
+      - "humble"
   workflow_dispatch:
 
 jobs:

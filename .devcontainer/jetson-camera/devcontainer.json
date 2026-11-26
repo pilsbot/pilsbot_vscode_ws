@@ -1,0 +1,39 @@
+// Nano camera container. Setup inside: ./setup.sh src/jetson-camera.repos && ./build.sh
+{
+	"name": "Pilsbot Nano camera (Humble, L4T r32)",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"WORKSPACE": "${containerWorkspaceFolder}"
+		}
+	},
+	"remoteUser": "root",
+	"runArgs": [
+		"--runtime=nvidia",
+		"--network=host",
+		"--ipc=host",
+		"--cap-add=SYS_PTRACE",
+		"--security-opt=seccomp:unconfined",
+		"--security-opt=apparmor:unconfined",
+		"--volume=/tmp/argus_socket:/tmp/argus_socket",
+		"--volume=/dev:/dev",
+		"--volume=/media/externSSD/bags:/workspaces/bags",
+		"--privileged"
+	],
+	"containerEnv": {
+		"NVIDIA_VISIBLE_DEVICES": "all",
+		"NVIDIA_DRIVER_CAPABILITIES": "all"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools",
+				"redhat.vscode-yaml"
+			]
+		}
+	}
+}
