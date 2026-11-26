@@ -21,7 +21,7 @@
          <lastmod>2026-11-26</lastmod>
     </url>
     <url>
-         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0006-prefer-lasting-ros2-standards/</loc>
          <lastmod>2026-11-26</lastmod>
     </url>
     <url>
@@ -30,6 +30,10 @@
     </url>
     <url>
          <loc>https://pilsbot.github.io/pilsbot_vscode_ws/GLOSSARY/</loc>
+         <lastmod>2026-11-26</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
          <lastmod>2026-11-26</lastmod>
     </url>
 </urlset>

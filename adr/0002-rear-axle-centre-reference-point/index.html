@@ -485,6 +485,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-prefer-lasting-ros2-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prefer ROS 2 standards that outlive Humble over custom equivalents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -546,10 +569,13 @@
 <h1 id="the-robot-reference-point-moves-from-the-front-axle-to-the-rear-axle-centre">The robot reference point moves from the front axle to the rear axle centre</h1>
 <p><code>base_link</code> used to be the front axle. The chassis and the OAK hung off the steering joint, so the camera's pose relative to <code>base_link</code> changed with every steering angle. This breaks the assumptions of visual SLAM and of the Ackermann planners. <code>base_link</code> now sits at the rear axle centre, with <code>base_footprint</code> on the ground below it. The odometry frame is renamed from <code>odom_raw</code> to <code>odom</code>.</p>
 <p>The odometry estimator is deliberately left unchanged. Its front-axle pose is converted to the rear axle centre by a pure frame transform that uses the measured steering angle and the wheelbase. That transform is the same ROS-free function the legacy-log converter uses, so live data and translated Kohlfahrt logs agree by construction. Replacing the estimator with a bicycle model is a separate, later decision.</p>
+<p>The controller publishes the result as <code>odom</code> → <code>base_footprint</code>, and the URDF root is <code>base_footprint</code> with <code>base_link</code> one wheel radius above it. The published twist is the same pure transform applied to velocities: the chassis yaws at the front-axle yaw rate plus the steering rate, which is differenced from consecutive steering measurements. It is deliberately not the no-slip bicycle constraint. Any lateral velocity it reports at the rear axle is the estimator's inconsistency made visible, not hidden.</p>
 <h2 id="consequences">Consequences</h2>
 <ul>
 <li>Kohlfahrt logs recorded since Feb 2023 contain no <code>/tf</code>. A missing comma in <code>log_kohl.launch.py</code> merged it into <code>/stereo/camera_info/tf</code>. The converter rebuilds TF from the recorded <code>/robot_description</code>, <code>/joint_states</code>, and <code>/odom</code>, and writes MCAP.</li>
 <li>The wheelbase must be measured on the robot. The old values disagree: 0.67 in the controller config and about 0.68 in the URDF.</li>
+<li>The <code>odom</code> origin stays where the estimator starts: the front axle's position at reset. <code>base_footprint</code> therefore starts one wheelbase behind the origin rather than at it.</li>
+<li>The stock diff-drive fallback config estimates the front axle, so it labels its odometry <code>front_axle</code> and publishes no TF.</li>
 </ul>
 
 

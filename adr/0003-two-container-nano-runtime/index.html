@@ -431,6 +431,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       Consequences
@@ -494,6 +503,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-prefer-lasting-ros2-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prefer ROS 2 standards that outlive Humble over custom equivalents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -537,6 +569,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       Consequences
@@ -564,7 +605,7 @@
 <h1 id="the-jetson-nano-runs-two-humble-containers-an-l4t-camera-container-and-a-stock-stack-container">The Jetson Nano runs two Humble containers: an L4T camera container and a stock stack container</h1>
 <p>The Nano is limited to L4T r32 (Ubuntu 18.04). The only Humble images that keep Jetson's hardware (GStreamer <code>nvjpegdec</code>/<code>nvv4l2decoder</code>, CUDA, TensorRT) are dusty-nv's <code>dustynv/ros:humble-*-l4t-r32.7.1</code>. They build ROS from source with gcc-8 and Python 3.6, and <code>apt install ros-humble-*</code> does not work in them. The official <code>ros:humble</code> (22.04) arm64 image has every binary package but no access to Jetson hardware. We use both:</p>
 <ul>
-<li><strong>Camera container</strong> (dustynv L4T): owns the OAK and its hardware-accelerated decoding. Only this container builds depthai from source.</li>
+<li><strong>Camera container</strong> (dustynv L4T): owns the OAK and its hardware-accelerated decoding, and the CSI camera (<code>jetson_camera</code>), which needs Jetson Argus. Only this container builds depthai from source.</li>
 <li><strong>Stack container</strong> (official <code>ros:humble</code>): ros2_control, the controllers, the driver, teleop, GNSS, localisation, navigation, foxglove_bridge, and recording, all from apt.</li>
 </ul>
 <p>Both use CycloneDDS (<code>RMW_IMPLEMENTATION=rmw_cyclonedds_cpp</code>) with <code>--network=host --ipc=host</code>.</p>
@@ -573,6 +614,8 @@
 <li>Everything in the dustynv container: rejected. ros2_control, Nav2, and rtabmap would all need source builds on gcc-8 and Python 3.6, and nav2 and rtabmap have no confirmed working build there.</li>
 <li>Everything in the official image: rejected. It loses the hardware decoding the camera driver depends on to stay fast.</li>
 </ul>
+<h2 id="transition">Transition</h2>
+<p>The camera container stays on the existing, proven Foxy image (<code>pilsbot/foxy-jetson</code>, L4T, CycloneDDS) while the stack container moves to Humble. Foxy and Humble interoperate over DDS for the camera's message types. A Humble desktop on FastDDS received the Foxy camera streams at full rate (2026-11-26, see ADR 0004). Moving the camera container to the dustynv Humble image is a separate, later step and does not block the Humble port of the rest of the stack.</p>
 <h2 id="consequences">Consequences</h2>
 <ul>
 <li>Full-resolution decoded frames are expensive to send between processes. Consumers of them should live in the camera container, ideally in the same process, unless measurements show the DDS copy is acceptable.</li>
