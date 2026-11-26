@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="LICENSE/">
+        <link rel="next" href="GLOSSARY/">
       
       
       <link rel="icon" href="assets/images/favicon.png">
@@ -342,6 +342,28 @@
   
   
     <li class="md-nav__item">
+      <a href="GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="LICENSE/" class="md-nav__link">
         
   
@@ -353,6 +375,166 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Adr
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Adr
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0001-humble-primary-foxy-backports/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Humble is primary; Foxy is kept alive through backports, not dual-distro code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0002-rear-axle-centre-reference-point/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot reference point moves from the front axle to the rear axle centre
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0003-two-container-nano-runtime/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Jetson Nano runs two Humble containers: an L4T camera container and a stock stack container
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0004-own-oak-driver-with-hardware-decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    We keep our own OAK camera node instead of depthai_ros_driver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0005-segmentation-on-the-oak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sidewalk segmentation runs on the OAK's neural accelerator first
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -460,15 +642,42 @@
 
 
 <h1 id="pilsbot-ros2-workspace">Pilsbot ROS2 Workspace</h1>
-<p>This repository contains a preconfigured workspace for development of the Pilsbot platform. The branch <code>foxy</code> includes all needed packages for desktop development and simulation. The branch <code>foxy-jetson</code> contains everything needed on the real hardware platform. Hence, it slightly differs from the main branch, since the custom build does currently not include any binary packages. </p>
-<p>In the future this might be fused into one branch, but this is currently not possible because the Jetson Nano officially doesn't support anything newer than Ubuntu 18.04.</p>
+<p>This repository contains a preconfigured workspace for development of the Pilsbot platform. The branch <code>humble</code> is the primary development line. The branch <code>foxy</code> is the maintained legacy line, which receives backports of substantial improvements (see <a href="docs/adr">docs/adr</a>).</p>
+<p>One branch serves every target. The targets differ only in which repos files they import and which devcontainer they use:</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Devcontainer</th>
+<th>Repos files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop development and simulation</td>
+<td><code>.devcontainer/desktop</code></td>
+<td><code>src/ros2.repos</code>, <code>src/desktop.repos</code> (default)</td>
+</tr>
+<tr>
+<td>Jetson Nano, everything except the camera</td>
+<td><code>.devcontainer/jetson-stack</code></td>
+<td><code>src/ros2.repos</code></td>
+</tr>
+<tr>
+<td>Jetson Nano, OAK camera with hardware decoding</td>
+<td><code>.devcontainer/jetson-camera</code></td>
+<td><code>src/jetson-camera.repos</code></td>
+</tr>
+</tbody>
+</table>
+<p>The Nano runs two containers side by side; see <a href="docs/adr/0003-two-container-nano-runtime.md">ADR 0003</a>. Project vocabulary lives in <a href="GLOSSARY/">GLOSSARY.md</a>.</p>
 <h2 id="how-to-use-this-workspace">How to use this workspace</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>You should already have Docker and VSCode with the remote containers plugin installed on your system.</p>
 <ul>
 <li><a href="https://docs.docker.com/engine/install/">docker</a></li>
 <li><a href="https://code.visualstudio.com/">vscode</a></li>
-<li><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">vscode remote containers plugin</a></li>
+<li><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">vscode dev containers extension</a></li>
 </ul>
 <h3 id="open-it-in-vscode">Open it in vscode</h3>
 <p>Clone the repository to a folder of your choice with</p>
@@ -482,15 +691,13 @@
 <p><img alt="template_vscode" src="https://user-images.githubusercontent.com/6098197/91332551-36898100-e781-11ea-9080-729964373719.png" /></p>
 <p>If you don't see the pop-up, click on the little green square in the bottom left corner, which should bring up the container dialog</p>
 <p><img alt="template_vscode_bottom" src="https://user-images.githubusercontent.com/6098197/91332638-5d47b780-e781-11ea-9fb6-4d134dbfc464.png" /></p>
-<p>In the dialog, select "Remote Containers: Reopen in container"</p>
+<p>In the dialog, select "Dev Containers: Reopen in Container" and pick the configuration for your target</p>
 <p>VSCode will build the dockerfile inside of <code>.devcontainer</code> for you.  If you open a terminal inside VSCode (Terminal-&gt;New Terminal), you should see that your username has been changed to <code>ros</code>, and the bottom left green corner should say "Dev Container"</p>
 <p><img alt="template_container" src="https://user-images.githubusercontent.com/6098197/91332895-adbf1500-e781-11ea-8afc-7a22a5340d4a.png" /></p>
 <h3 id="setup-the-workspace">Setup the workspace</h3>
 <ol>
-<li>Specify the repositories you want to include in your workspace in <code>src/ros2.repos</code>.
-   import the contents <code>Terminal-&gt;Run Task..-&gt;import from workspace file</code></li>
-<li>Install dependencies <code>Terminal-&gt;Run Task..-&gt;install dependencies</code></li>
-<li>Run the build task with <code>Ctrl+Shift+B</code></li>
+<li>Import the sources and install their dependencies with <code>./setup.sh</code> (desktop default), or pass the repos files for your target, e.g. <code>./setup.sh src/ros2.repos</code>. The tasks <code>Terminal-&gt;Run Task..-&gt;setup</code> and <code>import from workspace file</code> do the same.</li>
+<li>Run the build task with <code>Ctrl+Shift+B</code>, or <code>./build.sh</code>. Set <code>BUILD_TYPE</code> to override the default <code>RelWithDebInfo</code>.</li>
 </ol>
 <h3 id="launch-the-simulation">Launch the simulation</h3>
 <p>To test a successfull configuarion and build of the workspace you can start the Pilsbot
