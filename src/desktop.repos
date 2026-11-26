@@ -12,8 +12,8 @@ repositories:
   rqt_robot_steering:
     type: git
     url: https://github.com/pilsbot/rqt_robot_steering.git
-    version: ros2-ackermann
+    version: humble
   pilsbot_depthai:
     type: git
     url: https://github.com/pilsbot/pilsbot_depthai.git
-    version: foxy-devel
+    version: humble

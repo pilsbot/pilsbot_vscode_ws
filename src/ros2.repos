@@ -5,37 +5,37 @@
 #   ackermann_msgs, nmea_navsat_driver, tf_transformations, depthai_descriptions,
 #   joy, ros2_control / ros2_controllers, foxglove_bridge, ...
 #
-# TODO(branching): switch own repos to `version: humble` once those branches exist
-# (docs/adr/0001-humble-primary-foxy-backports.md).
+# Own repos track `humble` (docs/adr/0001-humble-primary-foxy-backports.md).
+# teleop_acker_joy stays on `foxy` until its old upstream `humble` is replaced.
 repositories:
   pilsbot_hw_ros:
     type: git
     url: https://github.com/pilsbot/pilsbot_hw_ros.git
-    version: foxy-devel
+    version: humble
   pilsbot_control:
     type: git
     url: https://github.com/pilsbot/pils_control.git
-    version: master
+    version: humble
   pilsbot_navigation:
     type: git
     url: https://github.com/pilsbot/pilsbot_navigation.git
-    version: main
+    version: humble
   pilsbot_description:
     type: git
     url: https://github.com/pilsbot/pilsbot_description.git
-    version: main
+    version: humble
   MCP23017_i2c_portexpander:
     type: git
     url: https://github.com/pilsbot/MCP23017_i2c_portexpander.git
-    version: master
+    version: humble
   pilsbot_gnss_receiver:
     type: git
     url: https://github.com/pilsbot/pilsbot_gnss_receiver.git
-    version: main
+    version: humble
   pilsbot_bringup:
     type: git
     url: https://github.com/pilsbot/pilsbot_bringup.git
-    version: foxy-devel
+    version: humble
   teleop_acker_joy:
     type: git
     url: https://github.com/pilsbot/teleop_acker_joy.git

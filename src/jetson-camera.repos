@@ -9,11 +9,11 @@ repositories:
   pilsbot_depthai:
     type: git
     url: https://github.com/pilsbot/pilsbot_depthai.git
-    version: feature/h265-encoded-transport
+    version: humble
   jetson_camera:
     type: git
     url: https://github.com/pilsbot/jetson_camera.git
-    version: master
+    version: humble
   luxonis/depthai-ros:
     type: git
     url: https://github.com/luxonis/depthai-ros.git
