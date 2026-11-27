@@ -45,11 +45,15 @@
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
-         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0012-simulation-on-gazebo-fortress/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
          <loc>https://pilsbot.github.io/pilsbot_vscode_ws/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>

@@ -1,0 +1,857 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pilsbot.github.io/pilsbot_vscode_ws/adr/0012-simulation-on-gazebo-fortress/">
+      
+      
+        <link rel="prev" href="../0011-nano-start-path-and-supervision/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>The simulation runs on Gazebo Fortress and goes through the robot's own launch path - pilsbot/pilsbot_vscode_ws</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-simulation-runs-on-gazebo-fortress-and-goes-through-the-robots-own-launch-path" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="pilsbot/pilsbot_vscode_ws" class="md-header__button md-logo" aria-label="pilsbot/pilsbot_vscode_ws" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pilsbot/pilsbot_vscode_ws
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The simulation runs on Gazebo Fortress and goes through the robot's own launch path
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pilsbot/pilsbot_vscode_ws" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="pilsbot/pilsbot_vscode_ws" class="md-nav__button md-logo" aria-label="pilsbot/pilsbot_vscode_ws" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    pilsbot/pilsbot_vscode_ws
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pilsbot/pilsbot_vscode_ws" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pilsbot ROS2 Workspace
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LICENSE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Adr
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Adr
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-humble-primary-foxy-backports/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Humble is primary; Foxy is kept alive through backports, not dual-distro code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-rear-axle-centre-reference-point/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot reference point moves from the front axle to the rear axle centre
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-two-container-nano-runtime/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Jetson Nano runs two Humble containers: an L4T camera container and a stock stack container
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-own-oak-driver-with-hardware-decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    We keep our own OAK camera node instead of depthai_ros_driver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-segmentation-on-the-oak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sidewalk segmentation runs on the OAK's neural accelerator first
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-prefer-lasting-ros2-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prefer ROS 2 standards that outlive Humble over custom equivalents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-inactive-hardware-and-activator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hardware starts inactive, and a hardware activator keeps it active
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-hoverboard-power-blind-toggle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hoverboard's power button is pressed blind, on silence and on clean shutdown only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-robot-profile-single-source/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot profile is the single source of facts about one physical Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-recording-and-foxglove-on-the-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kohlfahrt logs are split MCAP files on the SSD; Foxglove on the robot is read-only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-nano-start-path-and-supervision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    systemd restarts the whole stack container, and the motors are switched off between runs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    The simulation runs on Gazebo Fortress and goes through the robot's own launch path
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    The simulation runs on Gazebo Fortress and goes through the robot's own launch path
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#verified-in-the-spike" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verified in the spike
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-the-start-sequence-adr-0007" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interaction with the start sequence (ADR 0007)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considered options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#verified-in-the-spike" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verified in the spike
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-the-start-sequence-adr-0007" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interaction with the start sequence (ADR 0007)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considered options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="the-simulation-runs-on-gazebo-fortress-and-goes-through-the-robots-own-launch-path">The simulation runs on Gazebo Fortress and goes through the robot's own launch path</h1>
+<p>On Foxy the simulation was a separate world. It ran on Gazebo Classic with its own launch file, its own controller config (<code>acker_diff_controller_sim.yaml</code>, with other PID gains and limits, its own copy of the geometry and a differently named broadcaster), and a URDF flag <code>use_fake_hardware</code> that defaulted to <code>true</code> and then selected Classic's <code>GazeboSystem</code>. A result in that sim said little about the robot. Now the simulation runs on <strong>Gazebo Fortress</strong> (<code>ros_gz</code> and <code>ros-humble-gz-ros2-control</code> from apt, physics engine DART, the default), and it starts the robot's stack through the same launch files, controller config and start sequence as the robot. Gazebo Classic is removed from the code (URDF, launch files, controller config); the desktop devcontainer image still ships it (see Consequences).</p>
+<p>One seam selects what is behind the <code>ros2_control</code> interfaces: the argument <code>hardware:=real|gazebo</code> (later <code>kinematic</code>). It exists in the URDF (<code>pilsbot_description</code>) and in the launch files of <code>pilsbot_driver</code> and <code>pilsbot_bringup</code>, which pass it through every include together with <code>use_sim_time</code>. <code>pilsbot_simulation</code>'s <code>sim.launch.py</code> starts <code>gz sim</code>, spawns the robot from <code>robot_description</code>, bridges <code>/clock</code> and the cameras with <code>ros_gz_bridge</code>, and includes <code>pilsbot_bringup</code>'s <code>pilsbot.launch.py</code> with <code>hardware:=gazebo use_sim_time:=true</code>.</p>
+<ul>
+<li><strong>URDF:</strong> <code>hardware</code> has no usable default. An empty or unknown value stops xacro with a message that names the argument (ADR 0009). <code>real</code> selects <code>pilsbot_driver/PilsbotDriver</code> with the hoverboard and Head MCU sensors, exactly as before. <code>gazebo</code> selects <code>gz_ros2_control/GazeboSimSystem</code> and adds the Fortress <code>&lt;gazebo&gt;</code> block: the system plugin <code>gz_ros2_control::GazeboSimROS2ControlPlugin</code> and the camera sensors. With <code>real</code> the URDF has no <code>&lt;gazebo&gt;</code> element.</li>
+<li><strong>Launch:</strong> with <code>gazebo</code>, <code>ros2_control_node</code> and its Shutdown-on-exit handler are not started, because the controller manager runs inside Gazebo's plugin, and GNSS and lighting are not started either. robot_state_publisher, the spawners, the hardware activator, teleop and foxglove_bridge are the robot's launch code, with <code>use_sim_time</code>.</li>
+<li><strong>Controller config:</strong> the plugin gets two <code>&lt;parameters&gt;</code> files: the real <code>pilsbot_control/config/acker_diff_controller.yaml</code>, then the overrides file that <code>pilsbot_driver</code>'s <code>pilsbot.launch.py</code> writes from the robot profile (geometry and <code>use_sim_time</code>), passed to xacro as <code>controller_overrides:=&lt;path&gt;</code>. <code>acker_diff_controller_sim.yaml</code> is deleted. If the real gains misbehave in the sim, the sim model is fixed, not the controller.</li>
+<li><strong>Passive steering:</strong> the steering pivot is free and the two front wheels are driven, so the steering angle emerges from the wheel speed difference under the real controller's steering loop, as on the robot (glossary: passive steering). There is no sim-only controller and no position-controlled pivot.</li>
+<li><strong>Topics and frames:</strong> the robot's. <code>odom</code> → <code>base_footprint</code> from the controller, the URDF's OAK optical frames, the camera topic names of the Humble <code>pilsbot_depthai</code> node, and <code>AckermannDriveStamped</code> on <code>/pilsbot_velocity_controller/cmd_vel</code> from <code>teleop_acker_joy</code>.</li>
+</ul>
+<h2 id="verified-in-the-spike">Verified in the spike</h2>
+<p>The spike (<a href="https://github.com/pilsbot/pilsbot_simulation/issues/1">pilsbot_simulation#1</a>, branch <code>spike/fortress</code>) checked this on Fortress with <code>gz_ros2_control</code> 0.7.21 on a laptop (Intel HD 520) on 2026-11-27:</p>
+<ul>
+<li>The plugin loads both <code>&lt;parameters&gt;</code> files. The controller ran with the profile geometry (wheel separation 0.62, wheelbase 0.67, wheel radius 0.125) and the real PID (Kp 2.0), and <code>use_sim_time</code> was true on every node of the stack. The 11 XML comments in the URDF do no harm, because the plugin reads <code>robot_description</code> from robot_state_publisher.</li>
+<li>Passive steering on DART with the real PID, no damping or friction on the pivot and wheel friction mu = 1: commanded steering angles at standstill were reached within 0.001 rad, and within 0.01 rad while driving at 0.4 m/s. After 27.6 m of straight driving and full circles left and right at ±0.4 rad, odometry was 0.05 m off the ground truth. Bullet was not needed.</li>
+<li>The OAK colour, mono, depth and point-cloud topics come through <code>ros_gz_bridge</code> with their <code>camera_info</code> and the robot's frame_ids. Headless (<code>gz sim -s --headless-rendering</code>) the cameras render through EGL. With all cameras on, the real-time factor is 0.23–0.35 headless and about 0.6 with the GUI.</li>
+<li>The <code>ros2_control</code> sensors <code>hoverboard_api</code> and <code>head_mcu</code> are emitted only for <code>real</code>, because they are <code>PilsbotDriver</code> state interfaces.</li>
+</ul>
+<h2 id="interaction-with-the-start-sequence-adr-0007">Interaction with the start sequence (ADR 0007)</h2>
+<p>The spawners load both controllers <code>--inactive</code> and the hardware activator activates them, as on the robot. <code>gz_ros2_control</code> activates the hardware itself when Gazebo starts and ignores <code>hardware_components_initial_state</code>, so in the sim the activator never activates hardware and only takes its "activate controllers" branch. Its 5 s period counts in sim time: at a real-time factor of 0.3 the controllers became active about 25 s of wall time after the launch.</p>
+<p>Supervision (ADR 0011) has no counterpart in the sim. <code>sim.launch.py</code> ends the launch when Gazebo exits, and Gazebo runs with the <code>exec</code> launch prefix, so a signal to <code>ros2 launch</code> alone also stops the Gazebo server.</p>
+<h2 id="considered-options">Considered options</h2>
+<ul>
+<li><strong>Stay on Gazebo Classic:</strong> rejected. Classic is end of life since January 2025 and not packaged for the Ubuntu that Jazzy runs on, so every Classic line written now would be migration work later.</li>
+<li><strong>Gazebo Harmonic on Humble:</strong> rejected. Its packages conflict with <code>ros-humble-ros-gz</code>, and <code>gz_ros2_control</code> for that pairing exists only from source. Fortress is the Gazebo version paired with Humble and is supported until May 2027, like Humble (<a href="https://gazebosim.org/docs/latest/releases">Gazebo releases</a>). It has binaries for everything the sim needs. The step to Harmonic or Jetty comes with Jazzy and is mostly a rename (<code>ign</code> → <code>gz</code>).</li>
+<li><strong>A sim-only controller or a position-controlled steering pivot:</strong> rejected. It would drive well in the sim and say nothing about passive steering, which is what the real controller has to get right.</li>
+<li><strong>A separate simulation launch with its own node set:</strong> rejected. The sim would drift from the robot as the Foxy sim did. One argument through the existing launch files keeps the difference in one place.</li>
+<li><strong>Keep <code>use_fake_hardware</code> with a safe default:</strong> rejected. A boolean cannot grow a third mode, and any default hides a forgotten argument: with the old <code>true</code> default a caller that forgot the flag silently got the simulation plugin.</li>
+<li><strong>Physics without Gazebo (<code>hardware:=kinematic</code>):</strong> postponed. No standard <code>ros2_control</code> component models passive steering, so it needs its own small hardware plugin.</li>
+</ul>
+<h2 id="consequences">Consequences</h2>
+<ul>
+<li>Milestone 1 (driving) is the scope: no GNSS, no fault emulation (hoverboard silence, NaN steering), no kinematic mode and no citysim. Those are later milestones in the spec (<a href="https://github.com/pilsbot/pilsbot_vscode_ws/issues/28">pilsbot_vscode_ws#28</a>).</li>
+<li>The desktop devcontainer (<code>.devcontainer/desktop/Dockerfile</code>) still builds from <code>althack/ros2:humble-gazebo</code>, which ships Gazebo Classic. Moving it to a Fortress image is a follow-up; nothing in the stack uses Classic.</li>
+<li>Every caller of <code>pilsbot.urdf.xacro</code> must pass <code>hardware</code>. The driver launch and the legacy-log converter pass <code>hardware:=real</code>.</li>
+<li>The wheel inertias are solid cylinders computed from the profile's wheel radius, in both modes. The old placeholders of 1.0 kg m² turned the chassis about 7° when steering hard at standstill in the sim. Nothing on the robot reads them.</li>
+<li>With <code>hardware:=gazebo</code> the driver launch ignores <code>runtime_config_package</code>: the controller config always comes from <code>pilsbot_control</code>, and the launch logs that it ignored a non-default value.</li>
+<li><code>/dynamic_joint_states</code> in the sim carries only the joints, not the hoverboard and Head MCU sensor values.</li>
+<li>The sim's cameras differ from the robot's: depth is 32FC1 in metres (the robot: 16UC1 in mm), the mono images are raw (the robot publishes only <code>image_rect/compressed</code>), the sim always publishes the decoded colour image <code>/camera/color/image_raw</code> (the robot only with <code>enable_raw_decode:=true</code>), and <code>/camera/stereo/points</code> exists only in the sim. The CSI camera's Humble topic and frame on the robot are not confirmed yet.</li>
+<li>Starting or stopping with the steering at 1 rad or more makes the wheels slip in the sim, and odometry then loses tens of degrees of yaw. Steady driving at those angles tracks. The launch test uses 0.5 rad or less.</li>
+<li>The controller's <code>odom</code> origin is the front pivot's start position (ADR 0002), so <code>base_footprint</code> starts one wheelbase behind it. Tests check relative motion.</li>
+<li>The sim runs below real time with the cameras on. A headless drive test takes minutes, and it skips itself when Fortress is missing.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

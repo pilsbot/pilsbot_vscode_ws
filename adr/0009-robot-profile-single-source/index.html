@@ -641,6 +641,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-simulation-on-gazebo-fortress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The simulation runs on Gazebo Fortress and goes through the robot's own launch path
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -728,11 +751,8 @@
 <p>A missing or invalid value stops the launch, or the driver's <code>on_init</code>, with a message that names it. No hardcoded fallback is used.</p>
 <h2 id="scope">Scope</h2>
 <p>The profile holds facts about the robot, not tuning. PIDs, speed and acceleration limits, and the controller's soft steering limit (1.45 rad, inside the mechanical 1.58) stay with the nodes that use them, because they change when behaviour is tuned, not when the robot is rebuilt.</p>
-<p>Not in the profile yet:</p>
-<ul>
-<li>The GNSS receiver: its port (<code>/dev/ttyGPS</code>) and frame are fixed in <code>pilsbot_gnss_receiver</code>'s <code>u-blox.yaml</code>.</li>
-<li>The simulation: <code>acker_diff_controller_sim.yaml</code> still carries its own copy of the geometry.</li>
-</ul>
+<p>Not in the profile yet: the GNSS receiver. Its port (<code>/dev/ttyGPS</code>) and frame are fixed in <code>pilsbot_gnss_receiver</code>'s <code>u-blox.yaml</code>.</p>
+<p>The simulation reads the profile like the robot does: the URDF through xacro, and the controller through the same overrides file, which reaches Gazebo's <code>gz_ros2_control</code> plugin as a second parameter file (ADR 0012). <code>acker_diff_controller_sim.yaml</code>, which carried its own copy of the geometry, is deleted.</p>
 <h2 id="considered-options">Considered options</h2>
 <ul>
 <li>The URDF as the single source: rejected. Launch files need ports and the gamepad mapping before any URDF exists, and those are not robot geometry.</li>
