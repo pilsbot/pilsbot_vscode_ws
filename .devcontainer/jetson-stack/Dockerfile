@@ -19,6 +19,10 @@ ENV DEBIAN_FRONTEND=dialog
 
 # Must match the camera container (dustynv images default to CycloneDDS)
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+# To pin CycloneDDS to one network interface, run with
+#   -e CYCLONEDDS_URI=file://<workspace>/.devcontainer/jetson-stack/cyclonedds.xml
+#   -e PILSBOT_DDS_INTERFACE=<interface>
+# (see README). Unset, CycloneDDS picks an interface itself.
 
 # Non-root user matching the host's first user. Create it before any extra group, so that
 # its own group gets gid USER_UID as on the host.
