@@ -95,6 +95,14 @@ The Nano container with Jetson L4T libraries that owns both cameras: the OAK wit
 **Stack container**:
 The Nano container that runs everything else from Humble binary packages.
 
+**Hardware mode**:
+What sits behind the robot's `ros2_control` interfaces, chosen with the `hardware` argument of the URDF and the launch files: `real` (the Pilsbot driver on the robot's devices) or `gazebo` (Gazebo's `gz_ros2_control` plugin). It has no default in the URDF (ADR 0012).
+_Avoid_: fake hardware, mock hardware, use_fake_hardware, sim mode
+
+**Simulation**:
+Pilsbot in Gazebo Fortress, started by `pilsbot_simulation`'s `sim.launch.py`, which runs the robot's own launch path and controller config in hardware mode `gazebo` (ADR 0012).
+_Avoid_: fake hardware, Gazebo (for the whole setup)
+
 ## Frames
 
 **`odom`**:

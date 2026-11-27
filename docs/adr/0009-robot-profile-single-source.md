@@ -13,10 +13,9 @@ A missing or invalid value stops the launch, or the driver's `on_init`, with a m
 
 The profile holds facts about the robot, not tuning. PIDs, speed and acceleration limits, and the controller's soft steering limit (1.45 rad, inside the mechanical 1.58) stay with the nodes that use them, because they change when behaviour is tuned, not when the robot is rebuilt.
 
-Not in the profile yet:
+Not in the profile yet: the GNSS receiver. Its port (`/dev/ttyGPS`) and frame are fixed in `pilsbot_gnss_receiver`'s `u-blox.yaml`.
 
-- The GNSS receiver: its port (`/dev/ttyGPS`) and frame are fixed in `pilsbot_gnss_receiver`'s `u-blox.yaml`.
-- The simulation: `acker_diff_controller_sim.yaml` still carries its own copy of the geometry.
+The simulation reads the profile like the robot does: the URDF through xacro, and the controller through the same overrides file, which reaches Gazebo's `gz_ros2_control` plugin as a second parameter file (ADR 0012). `acker_diff_controller_sim.yaml`, which carried its own copy of the geometry, is deleted.
 
 ## Considered options
 
