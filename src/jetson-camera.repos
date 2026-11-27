@@ -4,8 +4,20 @@
 #
 # TODO(camera-container): add luxonis/depthai-core pinned to the release that
 # depthai-ros 2.11.x was built against. It is not pinned in depthai-ros itself, so
-# verify it before adding it rather than guessing.
+# verify it before adding it rather than guessing. Pin depthai-ros to the commit that
+# first builds and runs here; no Humble commit is known to work in this image yet.
+#
+# pilsbot_bringup is here for `ros2 launch pilsbot_bringup camera.launch.py` only. Its
+# other exec deps (foxglove_bridge, rosbag2_storage_mcap) and the pilsbot_log_tools
+# package in the same repo belong to the stack container and are not needed here.
+#
+# During the transition (ADR 0003) the camera container still runs the Foxy workspace;
+# this file is for the later dustynv Humble container. See README.
 repositories:
+  pilsbot_bringup:
+    type: git
+    url: https://github.com/pilsbot/pilsbot_bringup.git
+    version: humble
   pilsbot_depthai:
     type: git
     url: https://github.com/pilsbot/pilsbot_depthai.git
