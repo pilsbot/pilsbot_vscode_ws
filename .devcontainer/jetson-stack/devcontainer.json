@@ -1,4 +1,4 @@
-// Nano stack container. Setup inside: ./setup.sh src/ros2.repos && ./build.sh
+// Nano stack container. Setup inside: ./import_sources.sh src/ros2.repos && ./build.sh
 {
 	"name": "Pilsbot Nano stack (Humble, official image)",
 	"build": {

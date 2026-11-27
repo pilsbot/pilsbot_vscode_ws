@@ -73,7 +73,7 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 
 ### Setup the workspace
 
-1. Import the sources and install their dependencies with `./setup.sh` (desktop default), or pass the repos files for your target, e.g. `./setup.sh src/ros2.repos`. The tasks `Terminal->Run Task..->setup` and `import from workspace file` do the same and ask for the target.
+1. Import the sources and install their dependencies with `./import_sources.sh` (desktop default), or pass the repos files for your target, e.g. `./import_sources.sh src/ros2.repos`. The tasks `Terminal->Run Task..->setup` and `import from workspace file` do the same and ask for the target.
 2. Run the build task with `Ctrl+Shift+B`, or `./build.sh`. Set `BUILD_TYPE` to override the default `RelWithDebInfo`.
 
 ### Check the build
@@ -147,7 +147,7 @@ docker run -d --name pilsbot-humble --network=host --ipc=host --privileged \
   -e ROS_LOG_DIR=/workspaces/pilsbot_humble_ws/log/ros \
   -u ros -w /workspaces/pilsbot_humble_ws pilsbot/humble-stack sleep infinity
 docker exec -it pilsbot-humble bash
-./setup.sh src/ros2.repos
+./import_sources.sh src/ros2.repos
 MAKEFLAGS=-j1 ./build.sh --parallel-workers 1   # the 4 GB Nano runs out of memory otherwise
 
 # 4. When done testing: stop the container, then switch the motors off

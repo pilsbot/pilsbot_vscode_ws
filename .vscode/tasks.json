@@ -205,7 +205,7 @@
             "label": "import from workspace file",
             "detail": "Use vcs to import modules specified by the repos files of a target.",
             "type": "shell",
-            "command": "./setup.sh --no-deps ${input:reposFiles}",
+            "command": "./import_sources.sh --no-deps ${input:reposFiles}",
             "problemMatcher": []
         },
         {
@@ -226,7 +226,7 @@
             "label": "setup",
             "detail": "Import the repos files of a target and install their dependencies.",
             "type": "shell",
-            "command": "./setup.sh ${input:reposFiles}",
+            "command": "./import_sources.sh ${input:reposFiles}",
             "problemMatcher": []
         },
     ],
