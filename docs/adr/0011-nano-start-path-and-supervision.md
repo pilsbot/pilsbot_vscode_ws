@@ -5,7 +5,7 @@ On the robot, `pilsbot_stack.service` from [useful-scripts](https://github.com/p
 1. `enable_motors.bash` sets the motor outputs of the I2C port expander.
 2. `setup_serials.bash` creates the device links `/dev/ttyHoverboard`, `/dev/ttyHeadMCU`, and `/dev/ttyGPS`.
 3. `start_latest_pilsbot_stack.sh` `exec`s `docker run --rm` of the stack container, whose command `exec`s `ros2 launch pilsbot_bringup kohlfahrt_teleop_and_log.launch.py` (Kohl mode).
-4. `disable_motors.bash` clears the motor outputs. A trap runs it on every exit of `startall.bash`, including a failed step or a non-zero exit of the container.
+4. `disable_motors.bash` clears the motor outputs. A `trap … EXIT` runs it however `startall.bash` ends, including a failed step or a non-zero exit of the container ([useful-scripts#2](https://github.com/pilsbot/useful-scripts/pull/2)).
 
 Inside the launch, nothing restarts `ros2_control_node`. If it exits, for any reason, the whole launch shuts down (`OnProcessExit` → `Shutdown`). The container then exits, the motors are switched off, and systemd starts everything again a second later with a fresh controller manager. Failures below that level are handled where they happen:
 
@@ -29,4 +29,4 @@ The camera container is not part of this service. It drives nothing, so a camera
 
 - A crash of the controller manager costs a full stack restart of a few seconds plus the activator period, and the odometry restarts at the origin.
 - `disable_motors.bash` is the only thing that switches the motors off when `ros2_control_node` dies without its destructor running, for example on SIGKILL (ADR 0008).
-- Until the service starts the Humble image, it still runs the Foxy stack. The Humble stack container (`pilsbot-humble`) is started by hand with `docker exec` (README). In that setup an exit of `ros2_control_node` only ends the `ros2 launch`: the container stays up and the motors stay enabled.
+- Until the service starts the Humble image, it still runs the Foxy stack. The Humble stack container (`pilsbot-humble`) is started by hand with `docker exec` (README). In that setup an exit of `ros2_control_node` still shuts the launch down, but only the `ros2 launch` ends: the container stays up, nothing restarts, and the motors stay enabled. The tester runs `disable_motors.bash` by hand after stopping the container (README, "On the Jetson Nano", step 4).
