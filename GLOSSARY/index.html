@@ -319,6 +319,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#frames" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frames
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#data" class="md-nav__link">
     <span class="md-ellipsis">
       Data
@@ -533,6 +542,121 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0007-inactive-hardware-and-activator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hardware starts inactive, and a hardware activator keeps it active
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0008-hoverboard-power-blind-toggle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hoverboard's power button is pressed blind, on silence and on clean shutdown only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0009-robot-profile-single-source/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot profile is the single source of facts about one physical Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0010-recording-and-foxglove-on-the-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kohlfahrt logs are split MCAP files on the SSD; Foxglove on the robot is read-only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0011-nano-start-path-and-supervision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    systemd restarts the whole stack container, and the motors are switched off between runs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -594,6 +718,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#frames" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frames
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#data" class="md-nav__link">
     <span class="md-ellipsis">
       Data
@@ -634,6 +767,12 @@ The distance from the front axle's pivot to the rear axle centre.</p>
 <p><strong>Steering angle</strong>:
 The angle between the front axle and the chassis, measured at the pivot.
 <em>Avoid</em>: steering position, pot value (for the calibrated angle)</p>
+<p><strong>Steering rate</strong>:
+How fast the steering angle changes.
+<em>Avoid</em>: steering angle velocity (ambiguous, see steering authority)</p>
+<p><strong>Steering authority</strong>:
+How strongly the controller actively turns the front axle towards the commanded steering angle; zero means passive steering only. The gamepad mappings and Ackermann commands carry it in the field <code>steering_angle_velocity</code>.
+<em>Avoid</em>: steering angle velocity (ambiguous, see steering rate)</p>
 <p><strong>Passive steering</strong>:
 Turning the front axle by driving its two wheels at different speeds, since no motor acts on the pivot.</p>
 <p><strong>Acker-diff steering</strong>:
@@ -644,9 +783,21 @@ A switch marking the mechanical limit of the steering angle on either side.</p>
 <p><strong>Hoverboard</strong>:
 The repurposed hoverboard controller board and its two hub-motor wheels, which together drive the front axle.</p>
 <p><strong>Head MCU</strong>:
-The microcontroller on the front axle that reads the steering potentiometer and the endstops.</p>
+The microcontroller on the front axle that reads the steering potentiometer and the endstops, and presses the hoverboard's power button.</p>
+<p><strong>Power toggle</strong>:
+One simulated press of the hoverboard's power button, which switches the hoverboard on if it is off and off if it is on; nobody can tell which beforehand.
+<em>Avoid</em>: power on, power off, switching on (for the press itself)</p>
+<p><strong>Hardware activator</strong>:
+The node that brings the Pilsbot hardware and its controllers into operation whenever they are not, at startup and after every drop-out.
+<em>Avoid</em>: watchdog, supervisor</p>
+<p><strong>Enable button</strong>:
+The gamepad button that must be held for teleop to drive the robot; releasing it stops the robot (dead-man switch).
+<em>Avoid</em>: deadman, safety button</p>
+<p><strong>Turbo button</strong>:
+The gamepad button that drives with the faster turbo scaling while held, with or without the enable button; releasing it stops the robot like the enable button.
+<em>Avoid</em>: snail button</p>
 <p><strong>Robot profile</strong>:
-The single description of one physical Pilsbot: geometry, steering calibration, device ports, and joystick mapping.
+The single description of one physical Pilsbot: geometry, steering calibration, the ports of its devices, and its gamepad mapping. The GNSS receiver is not in it yet (ADR 0009).
 <em>Avoid</em>: config, robot yaml</p>
 <p><strong>StVO lighting</strong>:
 Headlight, turn signal, brake, and hazard behaviour that follows German road traffic rules (StVO).
@@ -665,14 +816,31 @@ The primary development line of all Pilsbot repositories, targeting ROS 2 Humble
 The maintained legacy line targeting ROS 2 Foxy, which receives backports of substantial distro-independent improvements.
 <em>Avoid</em>: old branch, foxy-devel</p>
 <p><strong>Camera container</strong>:
-The Nano container with Jetson L4T libraries that owns the OAK and its hardware-accelerated decoding.</p>
+The Nano container with Jetson L4T libraries that owns both cameras: the OAK with its hardware-accelerated decoding, and the CSI camera.</p>
 <p><strong>Stack container</strong>:
 The Nano container that runs everything else from Humble binary packages.</p>
+<h2 id="frames">Frames</h2>
+<p><strong><code>odom</code></strong>:
+The world-fixed odometry frame, whose origin is where the front axle stood when odometry was last reset.
+<em>Avoid</em>: odom_raw</p>
+<p><strong><code>base_footprint</code></strong>:
+The rear axle centre on the ground, which is the frame odometry tracks in <code>odom</code>.
+<em>Avoid</em>: base_link (for the tracked frame)</p>
+<p><strong><code>base_link</code></strong>:
+The rear axle centre at wheel-axle height, one wheel radius above <code>base_footprint</code>.</p>
 <h2 id="data">Data</h2>
+<p><strong>Kohlfahrt</strong>:
+A real outing with the robot, usually in public.
+<em>Avoid</em>: test drive (for an outing)</p>
+<p><strong>Kohl mode</strong>:
+The robot's configuration for a Kohlfahrt: the stack with gamepad teleop and recording, and the cameras at a reduced data rate (OAK at 480p and 10 fps on the Foxy line).</p>
 <p><strong>Kohlfahrt log</strong>:
-A bag recorded during a real outing with the robot, used as raw material for datasets.</p>
+A bag recorded during a Kohlfahrt, used as raw material for datasets.</p>
 <p><strong>Legacy log</strong>:
-A bag recorded before the robot reference point moved to the rear axle centre, which must be translated before it is used with current frames.</p>
+A Kohlfahrt log recorded before the robot reference point moved to the rear axle centre, which must go through the legacy-log converter before it is used with current frames.</p>
+<p><strong>Legacy-log converter</strong>:
+The tool that turns a legacy log into a Kohlfahrt log with current frames and topics.
+<em>Avoid</em>: bag migration, re-rooting (for the whole tool)</p>
 
 
 

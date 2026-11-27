@@ -25,15 +25,35 @@
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0007-inactive-hardware-and-activator/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0008-hoverboard-power-blind-toggle/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0009-robot-profile-single-source/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0010-recording-and-foxglove-on-the-robot/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/adr/0011-nano-start-path-and-supervision/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
          <loc>https://pilsbot.github.io/pilsbot_vscode_ws/GLOSSARY/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
-         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
-         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/</loc>
+         <loc>https://pilsbot.github.io/pilsbot_vscode_ws/LICENSE/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
 </urlset>
