@@ -305,9 +305,51 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#launch-the-simulation" class="md-nav__link">
+  <a href="#check-the-build" class="md-nav__link">
     <span class="md-ellipsis">
-      Launch the simulation
+      Check the build
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-the-jetson-nano" class="md-nav__link">
+    <span class="md-ellipsis">
+      On the Jetson Nano
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On the Jetson Nano">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-the-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build the image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start the container
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dds" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDS
     </span>
   </a>
   
@@ -626,9 +668,51 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#launch-the-simulation" class="md-nav__link">
+  <a href="#check-the-build" class="md-nav__link">
     <span class="md-ellipsis">
-      Launch the simulation
+      Check the build
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-the-jetson-nano" class="md-nav__link">
+    <span class="md-ellipsis">
+      On the Jetson Nano
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On the Jetson Nano">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-the-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build the image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start the container
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dds" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDS
     </span>
   </a>
   
@@ -719,19 +803,94 @@
 <p><img alt="template_container" src="https://user-images.githubusercontent.com/6098197/91332895-adbf1500-e781-11ea-8afc-7a22a5340d4a.png" /></p>
 <h3 id="setup-the-workspace">Setup the workspace</h3>
 <ol>
-<li>Import the sources and install their dependencies with <code>./setup.sh</code> (desktop default), or pass the repos files for your target, e.g. <code>./setup.sh src/ros2.repos</code>. The tasks <code>Terminal-&gt;Run Task..-&gt;setup</code> and <code>import from workspace file</code> do the same.</li>
+<li>Import the sources and install their dependencies with <code>./setup.sh</code> (desktop default), or pass the repos files for your target, e.g. <code>./setup.sh src/ros2.repos</code>. The tasks <code>Terminal-&gt;Run Task..-&gt;setup</code> and <code>import from workspace file</code> do the same and ask for the target.</li>
 <li>Run the build task with <code>Ctrl+Shift+B</code>, or <code>./build.sh</code>. Set <code>BUILD_TYPE</code> to override the default <code>RelWithDebInfo</code>.</li>
 </ol>
-<h3 id="launch-the-simulation">Launch the simulation</h3>
-<p>To test a successfull configuarion and build of the workspace you can start the Pilsbot
-simulation. You have two options to do so.</p>
-<ol>
-<li>Open a terminal in your workspace and type: <code>ros2 launch pilsbot_simulation pilsbot.launch.py</code></li>
-<li>Press <code>Ctrl+Shift+P</code> search for <code>ROS: Run a ROS launch file (roslaunch)</code>, type the package name <code>pilsbot_simulation</code>, choose a launch file e.g. <code>pilsbot.launch.py</code> and press <code>Enter</code> again to skip defining additional launch arguments.</li>
-</ol>
-<p>Congratulations, you now have a setup workspace to develop on the Pilsbot platform! 🎉</p>
+<h3 id="check-the-build">Check the build</h3>
+<p>The simulation (<code>pilsbot_simulation</code>) is not ported to Humble yet, so it is no smoke test for now. Check the build instead:</p>
+<pre><code>source install/setup.bash
+ros2 pkg executables pilsbot_driver   # lists hardware_activator
+xacro $(ros2 pkg prefix pilsbot_description)/share/pilsbot_description/urdf/pilsbot.urdf.xacro &gt; /dev/null
+</code></pre>
+<p><code>./build.sh</code> passes extra arguments to <code>colcon build</code>, e.g. <code>./build.sh --packages-select pilsbot_driver</code> or <code>./build.sh --packages-skip &lt;name&gt;</code>.</p>
 <p>If any issues occur during the setup process, do not hesitate to open an issue, so we can
 fix the problem as soon as possible.</p>
+<h2 id="on-the-jetson-nano">On the Jetson Nano</h2>
+<p>The Humble stack container lives next to the Foxy stack, which stays as it is: Foxy in <code>~/pilsbot_vscode_ws</code> (container <code>pilsbot_stack</code>, started by <code>pilsbot_stack.service</code> from <a href="https://github.com/pilsbot/useful-scripts">useful-scripts</a>), Humble in a second workspace <code>~/pilsbot_humble_ws</code> with the image <code>pilsbot/humble-stack</code> and the container <code>pilsbot-humble</code>. Never run both stacks at the same time: both drive the same serial ports, I2C port expander and gamepad.</p>
+<h3 id="build-the-image">Build the image</h3>
+<p>JetPack 4.6 ships an old Docker whose seccomp profile does not know <code>clone3</code>, which Ubuntu 22.04 uses. <code>docker run</code> works around it with <code>--security-opt seccomp=unconfined</code>, but <code>docker build</code> cannot, so <code>RUN apt-get update</code> may fail while building. Check the Docker version on the Nano first:</p>
+<pre><code>docker version --format '{{.Server.Version}}'
+</code></pre>
+<ul>
+<li>20.10.10 or newer: build on the Nano.</li>
+</ul>
+<p><code>git clone -b humble https://github.com/pilsbot/pilsbot_vscode_ws.git ~/pilsbot_humble_ws
+  cd ~/pilsbot_humble_ws
+  docker build -t pilsbot/humble-stack \
+    --build-arg WORKSPACE=/workspaces/pilsbot_humble_ws .devcontainer/jetson-stack</code></p>
+<p>Add <code>--build-arg USER_UID=$(id -u)</code> if <code>id -u</code> is not 1000.
+- Older, or the build fails with <code>clone3</code>, <code>Operation not permitted</code> or <code>pthread_create</code> errors: build for arm64 on a desktop (about 4 minutes under qemu) and copy the image over.</p>
+<p><code>docker run --privileged --rm tonistiigi/binfmt --install arm64   # once, enables qemu
+  docker buildx build --platform linux/arm64 --load -t pilsbot/humble-stack \
+    --build-arg WORKSPACE=/workspaces/pilsbot_humble_ws .devcontainer/jetson-stack
+  docker save pilsbot/humble-stack | ssh pilsbot@&lt;nano&gt; docker load</code></p>
+<h3 id="start-the-container">Start the container</h3>
+<p>The Foxy service also prepares the hardware: its <code>startall.bash</code> runs <code>enable_motors.bash</code> (switches the motor power on through the MCP23017 port expander at I2C 0x20), <code>setup_serials.bash</code> (stops <code>serial-getty</code> and creates <code>/dev/ttyHoverboard</code>, <code>/dev/ttyHeadMCU</code> and <code>/dev/ttyGPS</code>), the Foxy container, and <code>disable_motors.bash</code> when the container exits. The Humble container does none of this, so on the Nano run, in this order:</p>
+<pre><code># 1. Stop Foxy. `stop` lasts until the next reboot only: the service is enabled and
+#    starts Foxy again at boot. After a reboot, stop it again before starting Humble.
+sudo systemctl stop pilsbot_stack
+docker ps                                   # must not list pilsbot_stack
+
+# 2. Prepare the hardware like the service does (the symlinks in /dev do not survive a reboot)
+bash ~/useful-scripts/setup_serials.bash    # calls sudo itself; at the end, ttyHeadMCU and ttyGPS must point to devices
+sudo ~/useful-scripts/enable_motors.bash
+
+# 3. Start the Humble container (first time; later `docker start pilsbot-humble`)
+docker run -d --name pilsbot-humble --network=host --ipc=host --privileged \
+  --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
+  --group-add &quot;$(getent group input | cut -d: -f3)&quot; \
+  --group-add &quot;$(getent group i2c | cut -d: -f3)&quot; \
+  -v /dev:/dev -v /run/udev:/run/udev:ro \
+  -v ~/pilsbot_humble_ws:/workspaces/pilsbot_humble_ws \
+  --mount type=bind,source=/media/externSSD/bags,target=/workspaces/bags \
+  -e ROS_LOG_DIR=/workspaces/pilsbot_humble_ws/log/ros \
+  -u ros -w /workspaces/pilsbot_humble_ws pilsbot/humble-stack sleep infinity
+docker exec -it pilsbot-humble bash
+./setup.sh src/ros2.repos
+MAKEFLAGS=-j1 ./build.sh --parallel-workers 1   # the 4 GB Nano runs out of memory otherwise
+
+# 4. When done testing: stop the container, then switch the motors off
+docker stop pilsbot-humble
+sudo ~/useful-scripts/disable_motors.bash
+</code></pre>
+<p><code>~/useful-scripts</code> is <code>/home/pilsbot/useful-scripts</code>, where <code>pilsbot_stack.service</code> expects it. To return to Foxy without a reboot: <code>sudo systemctl start pilsbot_stack</code>. Do not <code>systemctl disable</code> the service for a test; a reboot is the way back to the normal Foxy robot. The Humble container has no <code>--restart</code> policy, so after a reboot only Foxy runs.</p>
+<p>Why the flags:</p>
+<ul>
+<li><code>--group-add</code>: <code>--privileged</code> lets the container open devices, but the user <code>ros</code> still needs file permissions. Humble's <code>joy_node</code> (SDL) reads the gamepad from <code>/dev/input/event*</code> (<code>root:input</code>, mode 0660), Foxy read the world-readable <code>/dev/input/js0</code>. The port expander uses <code>/dev/i2c-*</code> (group <code>i2c</code>). The gids must be the host's, which differ from the image's, so they are looked up on the host. Check that both <code>getent</code> calls print a line; <code>ls -ln /dev/input/event* /dev/i2c-*</code> shows the gids the devices really use.</li>
+<li><code>-v /run/udev:/run/udev:ro</code>: SDL learns about gamepads that connect later through udev.</li>
+<li><code>--mount</code> instead of <code>-v</code> for the bags: it fails if <code>/media/externSSD/bags</code> does not exist, where <code>-v</code> would create it. That does not prove the SSD is mounted: the Foxy service binds the same path with <code>--volume</code>, so if Foxy ever started without the SSD, the directory exists on the root file system and <code>--mount</code> binds it. The real guard is in the recording launch (<code>log_kohl.launch.py</code>, pilsbot_bringup): it records only if <code>&lt;output_dir&gt;/.pilsbot_bags</code> exists. Create that marker once, with the SSD mounted:</li>
+</ul>
+<p><code>mountpoint /media/externSSD &amp;&amp; sudo touch /media/externSSD/bags/.pilsbot_bags</code></p>
+<p>Without the SSD, the recording launch prints a <code>NOT RECORDING</code> banner and the rest of the stack runs. To record elsewhere, create the marker in that directory and bind it instead.</p>
+<p>The VS Code devcontainer <code>.devcontainer/jetson-stack</code> uses the same flags, and needs the same steps 1, 2 and 4 on the host. For <code>--group-add</code> it reads <code>PILSBOT_INPUT_GID</code> and <code>PILSBOT_I2C_GID</code> from the environment of the VS Code process that opens the container. Export them, then start VS Code from that shell (close other VS Code windows first, or the running instance keeps its old environment):</p>
+<pre><code>export PILSBOT_INPUT_GID=$(getent group input | cut -d: -f3)
+export PILSBOT_I2C_GID=$(getent group i2c | cut -d: -f3)
+code ~/pilsbot_humble_ws
+</code></pre>
+<p>If they are unset, the devcontainer falls back to the group names <code>input</code> and <code>i2c</code>, which resolve to the image's own groups. <code>ros</code> is already in those, so nothing is granted and the gamepad and I2C fail with "Permission denied". Check inside the container: <code>id</code> must list the two host gids.</p>
+<p>The camera container (<code>.devcontainer/jetson-camera</code>) runs as <code>root</code>, not <code>ros</code>, so it needs no group settings. It records nothing and does not mount the bags.</p>
+<h3 id="dds">DDS</h3>
+<p>Both containers use CycloneDDS (<code>RMW_IMPLEMENTATION=rmw_cyclonedds_cpp</code>) on the host network, and must use the same <code>ROS_DOMAIN_ID</code> (default 0; set it with <code>-e ROS_DOMAIN_ID=&lt;n&gt;</code> in both, and on a laptop that runs <code>ros2</code> commands against the robot). Foxglove connects over its WebSocket (port 8765) and does not depend on DDS.</p>
+<p>The Nano has several network interfaces (<code>docker0</code>, <code>l4tbr0</code>, <code>wlan0</code>, ...), and CycloneDDS may pick one the laptop cannot reach. If <code>ros2 topic list</code> on the laptop sees nothing from the robot, pin the interface with the shipped config by adding to <code>docker run</code>:</p>
+<pre><code>-e CYCLONEDDS_URI=file:///workspaces/pilsbot_humble_ws/.devcontainer/jetson-stack/cyclonedds.xml \
+-e PILSBOT_DDS_INTERFACE=wlan0
+</code></pre>
+<p>Take the interface name from <code>ip -br addr</code> on the Nano. Before using it, know what it costs:</p>
+<ul>
+<li>CycloneDDS refuses to start a node when the named interface does not exist, and probably also when it has no IP address (wifi not connected, no access point on an outing). Then no node starts, the driver included, so the robot does not drive.</li>
+<li>The camera container must use the same setting (the same two variables, with the path to <code>cyclonedds.xml</code> in its workspace). If one container is pinned and the other is not, they may pick different interfaces and not see each other's topics.</li>
+</ul>
+<p>So leave it off for outings, and use it only when the laptop really cannot see the robot.</p>
 <h2 id="good-to-know">Good to know</h2>
 <ul>
 <li>all packages added to the workspace should use <code>https</code>. If you have a Github account logged in your VSCode installation, you can easily push without the need for password authentication. You will be asked to acknowledge your login once via your browser and you're good to go.</li>
