@@ -1,4 +1,4 @@
-// Nano camera container. Setup inside: ./setup.sh src/jetson-camera.repos && ./build.sh
+// Nano camera container. Setup inside: ./import_sources.sh src/jetson-camera.repos && ./build.sh
 {
 	"name": "Pilsbot Nano camera (Humble, L4T r32)",
 	"build": {

@@ -18,7 +18,7 @@ jobs:
           docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/desktop/Dockerfile .
           docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
           bash -c "export BUILD_TYPE=Release && \
-            ./setup.sh && \
+            ./import_sources.sh && \
             ./build.sh && \
             ./test.sh \
           "
@@ -39,6 +39,6 @@ jobs:
           docker build -t $GITHUB_REPOSITORY -f ./.devcontainer/desktop/Dockerfile .
           docker run -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE -w $GITHUB_WORKSPACE $GITHUB_REPOSITORY \
           bash -c "
-          ./setup.sh --no-deps \
+          ./import_sources.sh --no-deps \
           && ament_${{ matrix.linter }} src/
           "
