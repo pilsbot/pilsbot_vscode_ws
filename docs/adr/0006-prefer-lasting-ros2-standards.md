@@ -13,3 +13,14 @@ First application: the custom `pilsbot_sensor_broadcaster` is removed. The upstr
 - New recordings contain `/dynamic_joint_states` instead of `/hoverboard_api` (`pilsbot_driver_msgs/HoverboardAPISensors`) and `/head_mcu` (`pilsbot_driver_msgs/SteeringAxleSensorsStamped`).
 - The legacy-log converter (ADR 0002) also maps those two legacy topics to `/dynamic_joint_states`, so datasets see one format across old and new logs.
 - The steering calibration script also reads the Head MCU values from `/dynamic_joint_states`, so it works while the ros2_control driver owns the Head MCU. The standalone `head_mcu_node` keeps publishing `/head_mcu` for calibration without the driver.
+
+## Known exceptions
+
+These forks predate this decision and are kept for now, because no standard covers them yet or they still need replacing:
+
+- `ds4drv` and `ds4_driver`: PS4 gamepad drivers without Humble binaries.
+- `teleop_acker_joy`: Ackermann teleop from a gamepad. `teleop_twist_joy` publishes only `Twist`. The workspace uses its `foxy` branch, because its GitHub `humble` branch is still the old upstream.
+- `rqt_robot_steering` (`humble` branch): the upstream plugin remapped to Ackermann commands.
+- The copies of `diff_drive_controller`'s `speed_limiter` and `odometry` inside `pils_control`. Replacing them with the upstream classes is a planned clean-up.
+
+A new fork needs the same justification: say which standard is missing or insufficient.
