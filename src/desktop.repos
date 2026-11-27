@@ -4,11 +4,11 @@ repositories:
   pilsbot_simulation:
     type: git
     url: https://github.com/pilsbot/pilsbot_simulation.git
-    version: main
+    version: humble
   citysim:
     type: git
     url: https://github.com/pilsbot/citysim.git
-    version: master
+    version: humble
   rqt_robot_steering:
     type: git
     url: https://github.com/pilsbot/rqt_robot_steering.git
