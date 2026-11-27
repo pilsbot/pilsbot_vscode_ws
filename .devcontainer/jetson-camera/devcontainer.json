@@ -17,8 +17,8 @@
 		"--security-opt=apparmor:unconfined",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
 		"--volume=/dev:/dev",
-		// --mount, unlike --volume, refuses to start when the SSD is not mounted
-		"--mount=type=bind,source=/media/externSSD/bags,target=/workspaces/bags",
+		// No bag folder: nothing in this container records. The stack container's
+		// log_kohl.launch.py records the camera topics too.
 		"--privileged"
 	],
 	"containerEnv": {
