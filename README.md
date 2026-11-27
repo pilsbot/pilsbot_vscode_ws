@@ -78,15 +78,26 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 
 ### Check the build
 
-The simulation (`pilsbot_simulation`) is not ported to Humble yet, so it is no smoke test for now. Check the build instead:
-
 ```
 source install/setup.bash
 ros2 pkg executables pilsbot_driver   # lists hardware_activator
-xacro $(ros2 pkg prefix pilsbot_description)/share/pilsbot_description/urdf/pilsbot.urdf.xacro > /dev/null
+xacro $(ros2 pkg prefix pilsbot_description)/share/pilsbot_description/urdf/pilsbot.urdf.xacro hardware:=real > /dev/null
 ```
 
+The URDF has no default hardware mode: without `hardware:=real` or `hardware:=gazebo`, xacro stops with a message that names the argument.
+
 `./build.sh` passes extra arguments to `colcon build`, e.g. `./build.sh --packages-select pilsbot_driver` or `./build.sh --packages-skip <name>`.
+
+### Simulation
+
+On the desktop, `pilsbot_simulation` runs the robot in Gazebo Fortress through the robot's own launch files and controller config, with `hardware:=gazebo` ([ADR 0012](docs/adr/0012-simulation-on-gazebo-fortress.md)). It needs `ros-humble-ros-gz` and `ros-humble-gz-ros2-control`; Gazebo Classic is not supported.
+
+```
+ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
+ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
+```
+
+Drive with the gamepad as on the robot, or see the [pilsbot_simulation README](https://github.com/pilsbot/pilsbot_simulation/tree/humble) for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012.
 
 If any issues occur during the setup process, do not hesitate to open an issue, so we can
 fix the problem as soon as possible.
