@@ -369,6 +369,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cameras-on-the-nano-during-the-transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cameras on the Nano during the transition
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -732,6 +741,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cameras-on-the-nano-during-the-transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cameras on the Nano during the transition
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -895,6 +913,38 @@ code ~/pilsbot_humble_ws
 <ul>
 <li>all packages added to the workspace should use <code>https</code>. If you have a Github account logged in your VSCode installation, you can easily push without the need for password authentication. You will be asked to acknowledge your login once via your browser and you're good to go.</li>
 </ul>
+<h2 id="cameras-on-the-nano-during-the-transition">Cameras on the Nano during the transition</h2>
+<p>On Humble, the stack container starts no camera (<code>kohlfahrt_teleop_and_log</code> neither): the cameras belong to the camera container (<a href="docs/adr/0003-two-container-nano-runtime.md">ADR 0003</a>). Until that container moves to the dustynv Humble image (<code>.devcontainer/jetson-camera</code>, <code>src/jetson-camera.repos</code>), it runs on Foxy:</p>
+<ul>
+<li><strong>Workspace:</strong> the Foxy workspace <code>~/pilsbot_vscode_ws</code> as the Foxy stack built it (<code>pilsbot_depthai</code> on <code>foxy-devel</code>, <code>jetson_camera</code> on <code>master</code>). Nothing is checked out or rebuilt, so the Foxy stack stays as it is.</li>
+<li><strong>Image:</strong> the one <code>pilsbot_stack.service</code> uses, named in <code>container=</code> in <code>~/useful-scripts/start_latest_pilsbot_stack.sh</code>.</li>
+<li><strong>Launch:</strong> the Foxy <code>pilsbot_bringup</code> has no <code>camera.launch.py</code>, so the container starts the two camera launches directly, with the settings of the Foxy Kohl mode (OAK-D Lite, 480p at 10 fps). <code>publish_urdf:=false</code>, because the Humble stack already publishes the OAK's frames from <code>pilsbot_description</code>.</li>
+</ul>
+<p>Run it next to the Humble stack container <code>pilsbot-humble</code>, never next to the Foxy stack, which starts the same cameras itself (<code>sudo systemctl stop pilsbot_stack</code> first):</p>
+<pre><code>FOXY_IMAGE=$(sed -n 's/^container=//p' ~/useful-scripts/start_latest_pilsbot_stack.sh)
+docker run -d --name pilsbot-camera --privileged --user ros --gpus=all \
+  --network=host --cap-add=SYS_PTRACE \
+  --security-opt=seccomp:unconfined --security-opt=apparmor:unconfined \
+  -v /tmp/argus_socket:/tmp/argus_socket -v /dev:/dev \
+  -v /home/pilsbot/pilsbot_vscode_ws:/workspaces/pilsbot_vscode_ws \
+  &quot;$FOXY_IMAGE&quot; bash -c '
+    trap &quot;kill -INT \$(jobs -p)&quot; INT TERM   # docker stop: shut both launches down cleanly
+    . /workspaces/pilsbot_vscode_ws/install/local_setup.bash
+    ros2 launch pilsbot_depthai rgb_stereo_node.launch.py camera_model:=OAK-D-LITE \
+      colorResolution:=480p colorFramerate:=10 monoResolution:=480p monoFramerate:=10 \
+      publish_urdf:=false &amp;
+    ros2 launch jetson_camera jetson_camera_launch.py &amp;
+    wait; wait'
+docker logs -f pilsbot-camera                          # Ctrl+C leaves it running
+docker stop -t 30 pilsbot-camera &amp;&amp; docker rm pilsbot-camera
+</code></pre>
+<p>Check from <code>pilsbot-humble</code> with <code>ros2 topic list</code> that the camera topics arrive. Foxy and Humble talk over DDS for these message types (ADR 0003). Both containers must use the same <code>ROS_DOMAIN_ID</code>.</p>
+<p>During the transition, the <code>camera</code> group of the Humble <code>recording.yaml</code> lists the Foxy camera topics (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/7">pilsbot_bringup#7</a>), so <code>log_kohl.launch.py</code> with the <code>camera</code> group records them from the Humble stack container:</p>
+<ul>
+<li><code>/color/video/image/compressed</code> and <code>/color/video/camera_info</code> (OAK)</li>
+<li><code>/image_raw/compressed</code> and <code>/camera_info</code> (CSI camera)</li>
+</ul>
+<p>The two <code>compressed</code> topics exist only if <code>compressed_image_transport</code> is installed in the Foxy camera image. Check on the robot, with the camera container running: <code>ros2 topic list | grep -E 'compressed|camera_info'</code> in <code>pilsbot-humble</code>. If the compressed topics are missing, the bags hold only the <code>camera_info</code> topics. The <code>compressed</code> plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the group changes to the Humble camera node's names.</p>
 
 
 
