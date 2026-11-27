@@ -106,4 +106,9 @@ docker stop -t 30 pilsbot-camera && docker rm pilsbot-camera
 
 Check from `pilsbot-humble` with `ros2 topic list` that the camera topics arrive. Foxy and Humble talk over DDS for these message types (ADR 0003). Both containers must use the same `ROS_DOMAIN_ID`.
 
-The Foxy camera topics (`/color/video/image`, `/stereo/depth`, `/image_raw`, ...) are not the ones in the `camera` group of the Humble `recording.yaml`, which expects the Humble `mjpeg_node` (`/camera/color/image_raw/compressed`, ...). The CSI camera's topic names under Humble (`jetson_camera` with its sub-node `camsub`) are also unconfirmed until the robot test. Until both are settled, Humble's `log_kohl.launch.py groups:=camera` records nothing from the Foxy cameras; record them in the camera container instead if you need them.
+During the transition, the `camera` group of the Humble `recording.yaml` lists the Foxy camera topics ([pilsbot_bringup#7](https://github.com/pilsbot/pilsbot_bringup/pull/7)), so `log_kohl.launch.py` with the `camera` group records them from the Humble stack container:
+
+- `/color/video/image/compressed` and `/color/video/camera_info` (OAK)
+- `/image_raw/compressed` and `/camera_info` (CSI camera)
+
+The two `compressed` topics exist only if `compressed_image_transport` is installed in the Foxy camera image. Check on the robot, with the camera container running: `ros2 topic list | grep -E 'compressed|camera_info'` in `pilsbot-humble`. If the compressed topics are missing, the bags hold only the `camera_info` topics. The `compressed` plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the group changes to the Humble camera node's names.
