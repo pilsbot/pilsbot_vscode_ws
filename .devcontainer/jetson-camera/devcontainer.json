@@ -17,7 +17,8 @@
 		"--security-opt=apparmor:unconfined",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
 		"--volume=/dev:/dev",
-		"--volume=/media/externSSD/bags:/workspaces/bags",
+		// --mount, unlike --volume, refuses to start when the SSD is not mounted
+		"--mount=type=bind,source=/media/externSSD/bags,target=/workspaces/bags",
 		"--privileged"
 	],
 	"containerEnv": {

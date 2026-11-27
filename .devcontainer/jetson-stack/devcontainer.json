@@ -16,7 +16,19 @@
 		"--security-opt=seccomp:unconfined",
 		"--security-opt=apparmor:unconfined",
 		"--volume=/dev:/dev",
-		"--volume=/media/externSSD/bags:/workspaces/bags",
+		// SDL (Humble's joy_node) watches udev for gamepad hotplug
+		"--volume=/run/udev:/run/udev:ro",
+		// --privileged opens the device cgroup but grants no file access to the non-root user:
+		// /dev/input/event* (gamepad) and /dev/i2c-* belong to the HOST's input and i2c groups.
+		// Export their gids before opening the container, e.g.
+		//   export PILSBOT_INPUT_GID=$(getent group input | cut -d: -f3)
+		//   export PILSBOT_I2C_GID=$(getent group i2c | cut -d: -f3)
+		// Unset, the image's own groups are used, which do not match the host's.
+		"--group-add=${localEnv:PILSBOT_INPUT_GID:input}",
+		"--group-add=${localEnv:PILSBOT_I2C_GID:i2c}",
+		// --mount, unlike --volume, refuses to start when the SSD is not mounted, instead of
+		// recording into an empty directory on the Nano's root file system
+		"--mount=type=bind,source=/media/externSSD/bags,target=/workspaces/bags",
 		"--privileged"
 	],
 	"customizations": {
