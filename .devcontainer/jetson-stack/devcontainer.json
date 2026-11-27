@@ -16,7 +16,24 @@
 		"--security-opt=seccomp:unconfined",
 		"--security-opt=apparmor:unconfined",
 		"--volume=/dev:/dev",
-		"--volume=/media/externSSD/bags:/workspaces/bags",
+		// SDL (Humble's joy_node) watches udev for gamepad hotplug
+		"--volume=/run/udev:/run/udev:ro",
+		// --privileged opens the device cgroup but grants no file access to the non-root user:
+		// /dev/input/event* (gamepad) and /dev/i2c-* belong to the HOST's input and i2c groups.
+		// Export their gids before opening the container, e.g.
+		//   export PILSBOT_INPUT_GID=$(getent group input | cut -d: -f3)
+		//   export PILSBOT_I2C_GID=$(getent group i2c | cut -d: -f3)
+		// Unset, the fallback names resolve to the image's own input/i2c groups, which `ros`
+		// already has, so nothing is granted and the gamepad and I2C fail with EACCES.
+		// The variables must be in the environment of the VS Code process that opens the
+		// container (start `code` from that shell); see README "On the Jetson Nano".
+		"--group-add=${localEnv:PILSBOT_INPUT_GID:input}",
+		"--group-add=${localEnv:PILSBOT_I2C_GID:i2c}",
+		// Does NOT guarantee the SSD: if the directory exists on the root fs (Foxy's --volume
+		// creates it when it starts without the SSD), this mounts that. The guard is in
+		// log_kohl.launch.py, which records only if <output_dir>/.pilsbot_bags exists
+		// (create it once on the SSD), see README.
+		"--mount=type=bind,source=/media/externSSD/bags,target=/workspaces/bags",
 		"--privileged"
 	],
 	"customizations": {

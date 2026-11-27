@@ -203,16 +203,16 @@
         },
         {
             "label": "import from workspace file",
-            "detail": "Use vcs to import modules specified by a workspace/rosinstall file.",
+            "detail": "Use vcs to import modules specified by the repos files of a target.",
             "type": "shell",
-            "command": "./setup.sh --no-deps",
+            "command": "./setup.sh --no-deps ${input:reposFiles}",
             "problemMatcher": []
         },
         {
             "label": "update workspace file",
-            "detail": "Use vcs to update repositories in src to workspace file.",
+            "detail": "Export EVERY checkout in src into one repos file; trim it to the target's repos before committing.",
             "type": "shell",
-            "command": "vcs export src --recursive > src/ros2.repos",
+            "command": "vcs export src --recursive > ${input:reposFile}",
             "problemMatcher": []
         },
         {
@@ -224,9 +224,9 @@
         },
         {
             "label": "setup",
-            "detail": "Set up the workspace",
+            "detail": "Import the repos files of a target and install their dependencies.",
             "type": "shell",
-            "command": "./setup.sh",
+            "command": "./setup.sh ${input:reposFiles}",
             "problemMatcher": []
         },
     ],
@@ -235,6 +235,28 @@
             "id": "package",
             "type": "promptString",
             "description": "Package name"
+        },
+        {
+            "id": "reposFiles",
+            "type": "pickString",
+            "description": "Repos files of the target (see README)",
+            "options": [
+                {"label": "Desktop", "value": "src/ros2.repos src/desktop.repos"},
+                {"label": "Nano stack container", "value": "src/ros2.repos"},
+                {"label": "Nano camera container", "value": "src/jetson-camera.repos"}
+            ],
+            "default": "src/ros2.repos src/desktop.repos"
+        },
+        {
+            "id": "reposFile",
+            "type": "pickString",
+            "description": "Repos file to overwrite",
+            "options": [
+                "src/ros2.repos",
+                "src/desktop.repos",
+                "src/jetson-camera.repos"
+            ],
+            "default": "src/ros2.repos"
         }
     ]
 }

@@ -17,7 +17,8 @@
 		"--security-opt=apparmor:unconfined",
 		"--volume=/tmp/argus_socket:/tmp/argus_socket",
 		"--volume=/dev:/dev",
-		"--volume=/media/externSSD/bags:/workspaces/bags",
+		// No bag folder: nothing in this container records. The stack container's
+		// log_kohl.launch.py records the camera topics too.
 		"--privileged"
 	],
 	"containerEnv": {

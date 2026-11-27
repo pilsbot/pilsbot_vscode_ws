@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  CycloneDDS config for the Nano's stack container (Humble, CycloneDDS 0.10).
+  The Nano has several interfaces (docker0, l4tbr0, wlan0, eth0); unpinned, CycloneDDS may
+  pick one the laptop cannot reach. Pin it with:
+
+    -e CYCLONEDDS_URI=file:///workspaces/pilsbot_humble_ws/.devcontainer/jetson-stack/cyclonedds.xml
+    -e PILSBOT_DDS_INTERFACE=wlan0
+
+  PILSBOT_DDS_INTERFACE defaults to wlan0. Check the name with `ip -br addr` on the host.
+  CycloneDDS fails to start when the named interface does not exist: without that network
+  no node starts, the driver included. The camera container must use the same setting, or
+  the two containers may not discover each other. Leave it off for outings unless needed.
+-->
+<CycloneDDS xmlns="https://cdds.io/config"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://cdds.io/config https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/releases/0.10.x/etc/cyclonedds.xsd">
+  <Domain Id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="${PILSBOT_DDS_INTERFACE:-wlan0}"/>
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>
