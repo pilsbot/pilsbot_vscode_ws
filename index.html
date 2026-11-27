@@ -971,7 +971,7 @@
 <p><img alt="template_container" src="https://user-images.githubusercontent.com/6098197/91332895-adbf1500-e781-11ea-8afc-7a22a5340d4a.png" /></p>
 <h3 id="setup-the-workspace">Setup the workspace</h3>
 <ol>
-<li>Import the sources and install their dependencies with <code>./setup.sh</code> (desktop default), or pass the repos files for your target, e.g. <code>./setup.sh src/ros2.repos</code>. The tasks <code>Terminal-&gt;Run Task..-&gt;setup</code> and <code>import from workspace file</code> do the same and ask for the target.</li>
+<li>Import the sources and install their dependencies with <code>./import_sources.sh</code> (desktop default), or pass the repos files for your target, e.g. <code>./import_sources.sh src/ros2.repos</code>. The tasks <code>Terminal-&gt;Run Task..-&gt;setup</code> and <code>import from workspace file</code> do the same and ask for the target.</li>
 <li>Run the build task with <code>Ctrl+Shift+B</code>, or <code>./build.sh</code>. Set <code>BUILD_TYPE</code> to override the default <code>RelWithDebInfo</code>.</li>
 </ol>
 <h3 id="check-the-build">Check the build</h3>
@@ -1024,7 +1024,7 @@ docker run -d --name pilsbot-humble --network=host --ipc=host --privileged \
   -e ROS_LOG_DIR=/workspaces/pilsbot_humble_ws/log/ros \
   -u ros -w /workspaces/pilsbot_humble_ws pilsbot/humble-stack sleep infinity
 docker exec -it pilsbot-humble bash
-./setup.sh src/ros2.repos
+./import_sources.sh src/ros2.repos
 MAKEFLAGS=-j1 ./build.sh --parallel-workers 1   # the 4 GB Nano runs out of memory otherwise
 
 # 4. When done testing: stop the container, then switch the motors off
