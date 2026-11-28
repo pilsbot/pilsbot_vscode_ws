@@ -106,11 +106,11 @@ With an nvidia card, use the `humble-cuda-desktop` base named in `.devcontainer/
 ```
 ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
 ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
-ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city, which does not drive on the desktop yet, ADR 0013)
+ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city, ADR 0013)
 ros2 launch pilsbot_simulation sim.launch.py cameras:=false         # no camera sensors, faster
 ```
 
-The city worlds come from `citysim` (`src/desktop.repos`) and download about 110 MB of Fuel models to `~/.ignition/fuel` on the first launch. Point clouds and the local costmap come from `pilsbot_navigation`, started next to the sim with `use_sim_time:=true`: `perception.launch.py cloud:=depth|stereo` publishes `/camera/points`, and `local_costmap.launch.py` reads it ([ADR 0013](docs/adr/0013-camera-and-point-cloud-pipeline.md)). On a desktop with CMake 4, citysim's plugins build only with `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`.
+The city worlds come from `citysim` (`src/desktop.repos`) and download about 110 MB of Fuel models to `~/.ignition/fuel` on the first launch. Point clouds and the local costmap come from `pilsbot_navigation`, started next to the sim with `use_sim_time:=true`: `perception.launch.py cloud:=depth|stereo` publishes `/camera/points`, and `local_costmap.launch.py` reads it ([ADR 0013](docs/adr/0013-camera-and-point-cloud-pipeline.md)). `mapping.launch.py input:=depth|stereo` runs rtabmap once [pilsbot_navigation#6](https://github.com/pilsbot/pilsbot_navigation/pull/6) is merged. On a desktop with CMake 4, citysim's plugins build only with `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`.
 
 Drive with the gamepad as on the robot, or see the [pilsbot_simulation README](https://github.com/pilsbot/pilsbot_simulation/tree/humble) for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012 and ADR 0013.
 
