@@ -1,0 +1,934 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pilsbot.github.io/pilsbot_vscode_ws/adr/0013-camera-and-point-cloud-pipeline/">
+      
+      
+        <link rel="prev" href="../0012-simulation-on-gazebo-fortress/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames - pilsbot/pilsbot_vscode_ws</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#two-point-cloud-pipelines-with-one-output-and-the-simulations-cameras-carry-the-robots-names-and-frames" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="pilsbot/pilsbot_vscode_ws" class="md-header__button md-logo" aria-label="pilsbot/pilsbot_vscode_ws" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pilsbot/pilsbot_vscode_ws
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pilsbot/pilsbot_vscode_ws" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="pilsbot/pilsbot_vscode_ws" class="md-nav__button md-logo" aria-label="pilsbot/pilsbot_vscode_ws" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    pilsbot/pilsbot_vscode_ws
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pilsbot/pilsbot_vscode_ws" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pilsbot ROS2 Workspace
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LICENSE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Adr
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Adr
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-humble-primary-foxy-backports/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Humble is primary; Foxy is kept alive through backports, not dual-distro code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-rear-axle-centre-reference-point/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot reference point moves from the front axle to the rear axle centre
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-two-container-nano-runtime/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Jetson Nano runs two Humble containers: an L4T camera container and a stock stack container
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-own-oak-driver-with-hardware-decoding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    We keep our own OAK camera node instead of depthai_ros_driver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-segmentation-on-the-oak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sidewalk segmentation runs on the OAK's neural accelerator first
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-prefer-lasting-ros2-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prefer ROS 2 standards that outlive Humble over custom equivalents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-inactive-hardware-and-activator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hardware starts inactive, and a hardware activator keeps it active
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-hoverboard-power-blind-toggle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The hoverboard's power button is pressed blind, on silence and on clean shutdown only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-robot-profile-single-source/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The robot profile is the single source of facts about one physical Pilsbot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-recording-and-foxglove-on-the-robot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kohlfahrt logs are split MCAP files on the SSD; Foxglove on the robot is read-only
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-nano-start-path-and-supervision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    systemd restarts the whole stack container, and the motors are switched off between runs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-simulation-on-gazebo-fortress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The simulation runs on Gazebo Fortress and goes through the robot's own launch path
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#verified-in-the-spike-and-the-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verified in the spike and the tickets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-the-simulation-adr-0012" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interaction with the simulation (ADR 0012)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citysims-worlds-and-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      citysim's worlds and plugins
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considered options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#verified-in-the-spike-and-the-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verified in the spike and the tickets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-the-simulation-adr-0012" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interaction with the simulation (ADR 0012)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citysims-worlds-and-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      citysim's worlds and plugins
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considered options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="two-point-cloud-pipelines-with-one-output-and-the-simulations-cameras-carry-the-robots-names-and-frames">Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames</h1>
+<p>On Foxy the simulation's depth came from Gazebo Classic's own point cloud, which had "coordinate system problems" that were never resolved, and mapping was tried with a sim-only <code>rtabmap_test.launch.py</code> on the old <code>/oak_d/*</code> topics, frame <code>oak-d_frame</code> and an <code>odom_raw</code> odometry frame. On the Humble line no point cloud can be computed from the robot's data, because the Humble <code>mjpeg_node</code> publishes no <code>camera_info</code>. Milestone 2 (<a href="https://github.com/pilsbot/pilsbot_vscode_ws/issues/35">pilsbot_vscode_ws#35</a>) makes the sim produce the robot's camera data on the robot's topic names and frames, in a city world, so that mapping and the Nav2 costmaps can be developed without the robot. Whether the OAK's on-device depth or host-side stereo works better can only be decided on the real OAK, so <strong>both point cloud pipelines exist, in the sim and on the robot, and both publish one output, <code>/camera/points</code></strong>. Gazebo's own point cloud is not used.</p>
+<ul>
+<li><strong>Images:</strong> <code>pilsbot_simulation</code> bridges the five camera images with <code>ros_gz_image</code>'s <code>image_bridge</code> (image_transport) instead of <code>parameter_bridge</code>, under the robot's names: <code>/camera/color/image_raw</code>, <code>/camera/left/image_rect</code>, <code>/camera/right/image_rect</code>, <code>/camera/stereo/depth</code> and <code>/front_camera/image_raw</code>. Each has one compressed transport beside it: <code>/compressed</code> on the four colour and mono images, <code>/compressedDepth</code> on depth. <code>parameter_bridge</code> (<code>config/bridge.yaml</code>) carries only <code>/clock</code> and the <code>camera_info</code>s (<a href="https://github.com/pilsbot/pilsbot_simulation/pull/12">pilsbot_simulation#12</a>).</li>
+<li><strong>Cameras off:</strong> the xacro argument <code>cameras:=true|false</code> (default <code>true</code>) leaves the five Gazebo <code>&lt;sensor&gt;</code>s out (<a href="https://github.com/pilsbot/pilsbot_description/pull/11">pilsbot_description#11</a>). It passes <code>sim.launch.py</code> → <code>pilsbot_bringup</code>'s <code>pilsbot.launch.py</code> → <code>pilsbot_driver</code>'s launch → xacro, next to <code>hardware</code> and <code>use_sim_time</code> (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/15">pilsbot_bringup#15</a>, <a href="https://github.com/pilsbot/pilsbot_hw_ros/pull/20">pilsbot_hw_ros#20</a>). With <code>false</code> nothing is rendered, no camera topic exists, and <code>image_bridge</code> and the relay below are not started. The drive launch test uses it. With <code>hardware:=real</code> it changes nothing.</li>
+<li><strong>Stereo baseline relay:</strong> Fortress publishes half the OAK's baseline on every stereo camera (below). <code>bridge.yaml</code> puts the left, right and depth <code>camera_info</code> on <code>/gz/camera/{left,right,stereo}/camera_info</code>, and the sim-only <code>scripts/camera_info_relay.py</code> republishes them on the robot's names with left and depth P[3] = 0 and right P[3] = −fx·B. B comes from tf, i.e. from the URDF (0.075 m). It holds the right <code>camera_info</code> back until tf has the baseline and keeps the stamps, so exact-time sync still works.</li>
+<li><strong>Point cloud pipelines:</strong> <code>pilsbot_navigation</code>'s <code>perception.launch.py</code> (<code>cloud:=depth|stereo</code>, default <code>depth</code>; <code>use_sim_time</code>; <code>sync:=approximate|exact</code>, default <code>approximate</code>) runs one composable container (<a href="https://github.com/pilsbot/pilsbot_navigation/pull/4">pilsbot_navigation#4</a>):</li>
+<li><code>depth</code>: <code>depth_image_proc</code> <code>PointCloudXyzNode</code> on <code>/camera/stereo/depth</code> + <code>/camera/stereo/camera_info</code>.</li>
+<li><code>stereo</code>: <code>stereo_image_proc</code> <code>DisparityNode</code> and <code>PointCloudNode</code> on <code>/camera/{left,right}/image_rect</code> + their <code>camera_info</code>s.</li>
+<li>Both publish <code>sensor_msgs/PointCloud2</code> on <code>/camera/points</code> in <code>oak_left_camera_optical_frame</code>. Only the QoS differs: <code>depth</code> publishes best effort, <code>stereo</code> reliable, so consumers subscribe with sensor-data QoS, which receives both. The same file runs on the robot and in the sim; nothing robot- or sim-specific is in it. <code>approximate</code> is the default for the real OAK; in the sim the pair is stamped identically and <code>exact</code> works too.</li>
+<li><strong>Costmaps:</strong> <code>config/costmaps.yaml</code> reads <code>/camera/points</code> in every observation source, with <code>robot_base_frame: base_footprint</code> and a footprint polygon from the robot profile and the URDF instead of <code>robot_radius: 0.22</code>. <code>local_costmap.launch.py</code> runs the standalone <code>nav2_costmap_2d</code> node for tests and Foxglove (<a href="https://github.com/pilsbot/pilsbot_navigation/pull/5">pilsbot_navigation#5</a>). Full Nav2 navigation is a later milestone.</li>
+<li><strong>Mapping:</strong> <code>pilsbot_navigation</code>'s <code>mapping.launch.py</code> (<code>input:=depth|stereo</code>, default <code>depth</code>; <code>use_sim_time</code>; <code>sync:=approximate|exact</code> as in <code>perception.launch.py</code>; <code>delete_db_on_start</code>, default <code>false</code>; <code>database_path</code>, default <code>~/.ros/rtabmap.db</code>) runs rtabmap on the OAK's images, not on <code>/camera/points</code> (<a href="https://github.com/pilsbot/pilsbot_navigation/pull/6">pilsbot_navigation#6</a>, resolves <a href="https://github.com/pilsbot/pilsbot_navigation/issues/2">pilsbot_navigation#2</a>):</li>
+<li><code>depth</code>: <code>rtabmap_sync</code>'s <code>rgbd_sync</code> pairs <code>/camera/left/image_rect</code> + its <code>camera_info</code> with <code>/camera/stereo/depth</code>.</li>
+<li><code>stereo</code>: <code>stereo_sync</code> pairs <code>/camera/{left,right}/image_rect</code> + their <code>camera_info</code>s; rtabmap takes the baseline from the right P[3].</li>
+<li><code>rtabmap_slam</code>'s <code>rtabmap</code> in namespace <code>/rtabmap</code> with <code>frame_id: base_footprint</code>, no visual odometry and <code>Reg/Force3DoF</code>. The wheel odometry is the controller's <code>odom</code> → <code>base_footprint</code> transform, read from tf at each pair's stamp (<code>odom_frame_id: odom</code>; no <code>odom_raw</code>), not the <code>/odom</code> topic, which would carry the controller's yaw variance of 1000 rad² into the graph. The spec says "odom topic"; the PR leaves this to its review.</li>
+<li>rtabmap is the only publisher of <code>map</code> → <code>odom</code>. The occupancy grid is on <code>/map</code> (for the global costmap's static layer later), split by height as in <code>costmaps.yaml</code> (ground up to 0.1 m above <code>base_footprint</code>, obstacles up to 2 m) instead of rtabmap's normals segmentation, with a radius noise filter.</li>
+<li>With <code>delete_db_on_start:=false</code> a new run continues the map in the database (the old <code>rtabmap_test.launch.py</code> deleted it on every start).</li>
+</ul>
+<p><code>pilsbot_simulation</code>'s <code>rtabmap_test.launch.py</code> is deleted (<a href="https://github.com/pilsbot/pilsbot_simulation/pull/14">pilsbot_simulation#14</a>), so until #6 is merged there is no rtabmap launch on <code>humble</code>.
+- <strong><code>camera_info</code> on the robot (pending):</strong> <code>mjpeg_node</code> publishes a <code>camera_info</code> next to each image from the OAK's factory calibration, with the right camera's intrinsics on both rectified images, right P[3] = −fx·baseline, depth aligned to the left camera (<code>RECTIFIED_LEFT</code>, so frame, <code>camera_info</code> and the depth image agree) and capture-time stamps on all four streams (<a href="https://github.com/pilsbot/pilsbot_depthai/pull/5">pilsbot_depthai#5</a>). It is compiled and unit-tested only, and is merged only after its hardware test on the OAK. Until then neither pipeline runs on real data.
+- <strong>CSI camera:</strong> on the robot and in the sim its images are <code>/front_camera/image_raw</code> (+ <code>/compressed</code>) and <code>/front_camera/camera_info</code>, stamped with the new <code>front_camera_optical_frame</code>, a fixed child of <code>front_camera_link</code> with the REP 103 optical rotation (z forward, x right, y down) (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/12">pilsbot_bringup#12</a>, <a href="https://github.com/pilsbot/pilsbot_bringup/pull/16">pilsbot_bringup#16</a>, <a href="https://github.com/pilsbot/pilsbot_description/pull/11">pilsbot_description#11</a>). The sim's sensor is 1280×720 at 30 fps with the robot's horizontal field of view and no distortion (below).
+- <strong>citysim:</strong> the Gazebo Classic city world is ported to Fortress on citysim's <code>humble</code> branch, as an ament package with an environment hook for the resource and plugin paths, its external models referenced by Fuel URI, and its plugins ported (below) (<a href="https://github.com/pilsbot/citysim/pull/1">citysim#1</a> to <a href="https://github.com/pilsbot/citysim/pull/4">#4</a>). <code>sim.launch.py</code> takes <code>world:=flat|citysim|citysim_block|&lt;path&gt;</code>; <code>flat</code> stays the default for tests and control work, and both city worlds spawn the robot on a road at (−35, −1.8, 5.03) (<a href="https://github.com/pilsbot/pilsbot_simulation/pull/14">pilsbot_simulation#14</a>).</p>
+<h2 id="verified-in-the-spike-and-the-tickets">Verified in the spike and the tickets</h2>
+<p>The spike (<a href="https://github.com/pilsbot/pilsbot_simulation/issues/4#issuecomment-7233005331">pilsbot_simulation#4</a>, branches <code>spike/m2</code> in citysim, pilsbot_simulation and pilsbot_description, numbers in <code>pilsbot_simulation/spike_evidence_m2/</code>) ran on the laptop (i7-6500U, Intel HD 520) with ign-gazebo 6.18.0, ign-rendering 6.6.4, ros_gz 0.244.27 and gz_ros2_control 0.7.21, headless, on 2026-11-28. The tickets repeated the checks on the desktop.</p>
+<ul>
+<li><strong>Frame test, both pipelines:</strong> a textured target at a known pose in front of the robot; each cloud is transformed with tf into <code>base_footprint</code> at its stamp. In the spike (a box with its front face at x = 3.0) the depth cloud lay on the face exactly and the stereo cloud within 8.4 mm (p95), neither mirrored. The committed launch test in <code>pilsbot_navigation</code> uses a centred L-shaped target of two thin boards, so that a mirrored cloud puts the tower on the wrong side and an upside-down one loses the low half: depth 100 % of the points within 5 cm of the face, stereo 99.83 % (mean −6.8 mm, p95 17.5 mm), mirrored region empty for both. The tf <code>base_footprint</code> ← <code>oak_left_camera_optical_frame</code> has the correct optical rotation, so the OAK frames in the URDF stay as they are.</li>
+<li><strong>Gazebo's own point cloud:</strong> read in the frame its header names (<code>oak_left_camera_optical_frame</code>), 0 % of its points lay on the face, which appeared mirrored and in the wrong place (x 0.53…1.49, y −6.2…−0.6). Read in the x-forward link frame <code>oak_left_camera_frame</code>, 100 % did. The cloud is x-forward data under an optical-frame header, the likely cause of the Classic "coordinate system problems".</li>
+<li><strong>Half the baseline:</strong> Fortress publishes P[3] = −16.2866 = −fx·0.0375 on the left, the right and the depth <code>camera_info</code> (fx 434.31), half the 7.5 cm baseline and on the left camera too; the colour camera has 0. <code>stereo_image_proc</code> takes the baseline from the right P[3], so on the raw <code>camera_info</code>s it placed the box at half its distance from the camera (x = 1.906 instead of 3.0). With the relay it placed it at 2.992. <code>depth_image_proc</code> ignores P[3].</li>
+<li><strong>Images:</strong> <code>image_bridge</code> gives the robot's names with <code>/compressed</code> and costs the same real-time factor as <code>parameter_bridge</code> (0.229 vs 0.230). <code>/camera/stereo/depth/compressed</code> logs an error for every frame while subscribed (32FC1 is not JPEG/PNG), so only <code>compressedDepth</code> is enabled on depth. The sim test checks every image, its one transport and its <code>camera_info</code>, each in its camera's optical frame.</li>
+<li><strong>Mono images are linear:</strong> the same scene averaged 120.8 grey in the colour image and 55.6 in the left L8 image. ign-rendering renders every camera into an sRGB texture and decodes it to linear when it makes the L8 image. The sim's mono images are darker than the real OAK's; this is not corrected.</li>
+<li><strong>No CSI distortion:</strong> Fortress's ogre2 does not render lens distortion (<code>ImageBrownDistortionModel is not supported in ogre2</code>), so the sim's CSI sensor has none and its <code>camera_info</code> says D = 0, which matches its pinhole images.</li>
+<li><strong>Mapping (navigation#6):</strong> its launch test runs once per <code>input</code> in the flat world with the frame test's target 3 m ahead and <code>delete_db_on_start:=true</code> over an unreadable old file at <code>database_path</code>. Both inputs pass: the file is replaced by a new SQLite database (without <code>-d</code> rtabmap stops on it with <code>DB error: file is not a database</code>), the standing robot gets a node in <code>map</code>, a 0.6 m drive moves the graph's last node at least 0.4 m ahead with under 0.1 m lateral, <code>map</code> → <code>odom</code> stays at identity on the straight and has no other publisher (nothing on <code>/tf_static</code>), and <code>/map</code> has no occupied cell on the floor in front of the target and every row across its face occupied. With rtabmap's default grid, depth put 56 occupied cells on that floor. A scripted 4 m drive in <code>citysim_block</code> gave 10 graph nodes for both inputs; depth had no occupied cell in the lane, stereo 39 in clusters 4–7 m ahead (the plain road gives stereo few points). On a straight without loop closures <code>map</code> → <code>odom</code> stays at identity anyway, so the test catches a correction, not a frame error that causes none; a camera frame error shows in the <code>/map</code> check instead.</li>
+<li><strong>citysim on Fortress:</strong> the full city loads 638 models with no SDF errors once 12 Classic-only elements and Fortress crashes are worked around (the spike's table; among them <code>&lt;road&gt;</code> not rendered, <code>model://</code> dependencies the Fuel client skips, collision meshes that segfault DART, actor skins without an animation that crash the sensors' render thread, and zero-length actor trajectories that stall it). The port found three more: buildings coloured by OGRE material scripts rendered black, the jersey barriers had no mesh or collision, and the RoboCup field's infinite collision plane raised the whole city's ground by 6 cm.</li>
+</ul>
+<h2 id="interaction-with-the-simulation-adr-0012">Interaction with the simulation (ADR 0012)</h2>
+<p>Everything above goes through ADR 0012's launch path: <code>sim.launch.py</code> only adds the image bridge, the relay and the world, and the stack runs with <code>hardware:=gazebo use_sim_time:=true</code>. <code>perception.launch.py</code>, <code>local_costmap.launch.py</code> and <code>mapping.launch.py</code> (navigation#6) are started next to it with <code>use_sim_time:=true</code>, the same way they will be started on the robot. Which machine runs them on the robot is decided at the robot test.</p>
+<h2 id="citysims-worlds-and-plugins">citysim's worlds and plugins</h2>
+<ul>
+<li><strong>Two worlds:</strong> <code>citysim</code> is the full city (sun shadows off). <code>citysim_block</code> is the city cropped to x −60…30, y −30…30 (86 models, no moving cars). With all cameras the spike measured a real-time factor of 0.199 for the full city and 0.23 for the block, against a target of 0.2. These are the spike's setup: the CSI image was 848×480 (now 1280×720), Bloom and the moving cars did not exist yet (citysim#3 estimates about 2 % for Bloom from one camera, citysim#4 measured about 1.5 % for the cars, server only), and the block's 0.23 ran at a 1 ms physics step, while the shipped block uses 2 ms. On the desktop under other load, the port's drive check got 0.25–0.5 in the block and 0.16–0.22 in the full city, and the stall investigation (<a href="https://github.com/pilsbot/pilsbot_simulation/issues/15">pilsbot_simulation#15</a>, load average 6–9 on 4 cores) median 0.17 in the full city with cameras, 0.23 without, and 0.11 in the block: on a loaded desktop the load sets the real-time factor more than the world does. Odometry matched ground truth within 0.5 % in both worlds (full city and block: 10.84 m odometry, 10.88 m ground truth for a 12 s straight). The block stays the world for perception and mapping, because on the unloaded laptop it was the one that met the 0.2 target. Primitive collision proxies for the static scenery are the next lever, built only if the full city's speed hurts.</li>
+<li><strong>World source:</strong> the <code>.sdf</code> files are the source. Classic's Ruby template and <code>.world</code> are deleted; the spike's converter stays in git history. Physics step 2 ms, all scenery static, the heightmap's visual replaced by a mesh of the same heightmap.</li>
+<li><strong>Fuel:</strong> the 54 external models are Fuel URIs. The first launch downloads about 110 MB to <code>~/.ignition/fuel</code> (about two minutes); no copies are in the repo.</li>
+<li><strong>TrafficLights:</strong> a world system (<code>citysim::TrafficLights</code>) with Classic's <code>&lt;key value model color&gt;</code> config. It listens on <code>/keyboard/keypress</code> and changes the stop lights' visuals, which the sensor cameras see. Keys come from the GUI's <code>KeyPublisher</code>, which replaces Classic's <code>Keyboard</code> plugin; it sends Qt key codes, and the system accepts those and Classic's ASCII codes.</li>
+<li><strong>Bloom:</strong> an ogre2 render pass with Classic's shader chain, added to every colour sensor camera by a world system and to the 3D view by a GUI plugin. Turning it off means removing both plugin elements from the world.</li>
+<li><strong>Moving cars:</strong> the full city's 8 cars follow Classic's trajectories through a kinematic model system, <code>citysim::WaypointMover</code>. Their collisions follow at 10 Hz, and they pass through whatever stands in their way.</li>
+<li><strong>LensFlare: deferred to Harmonic</strong> (<a href="https://github.com/pilsbot/pilsbot_simulation/issues/10">pilsbot_simulation#10</a>). Harmonic ships a lens flare pass and system, so a Fortress back-port (3–5 days) would be thrown away on the upgrade.</li>
+<li><strong>Joy: dropped.</strong> The robot is driven through ROS <code>joy_node</code> and <code>teleop_acker_joy</code>, in the sim as on the robot; a Gazebo joystick plugin would publish to a topic nothing reads.</li>
+</ul>
+<h2 id="considered-options">Considered options</h2>
+<ul>
+<li><strong>Bridge Gazebo's own point cloud:</strong> rejected. Its header names a frame its data is not in, the robot has no such cloud, and fixing it would need a sim-only frame. Two pipelines that run unchanged on the robot are what the sim has to test.</li>
+<li><strong>One point cloud pipeline now:</strong> rejected. On-device depth costs the Nano nothing but its quality on the real OAK is unknown; stereo on the host costs CPU and needs texture. The comparison needs the real OAK and its <code>camera_info</code>. One output topic keeps the consumers (the costmaps) the same either way; mapping reads the images and makes the same choice with its own <code>input:=</code>.</li>
+<li><strong>Images on <code>parameter_bridge</code>:</strong> rejected. It gives raw images only, while the robot publishes compressed ones, which Foxglove and the bags use. <code>image_bridge</code> costs the same real-time factor.</li>
+<li><strong>Use Gazebo's <code>camera_info</code> as published:</strong> rejected. Stereo depth comes out at half the distance. The relay is sim-only and takes the baseline from the URDF, so it does not hide a robot fault: on the robot the baseline comes from the OAK's own calibration.</li>
+<li><strong>CSI images in <code>front_camera_link</code>:</strong> the spec's first choice, superseded after the spike. An image stamped with an x-forward link frame is projected rotated by everything that uses it (people tracking later), the same mistake as Gazebo's cloud.</li>
+<li><strong>Render the CSI distortion, or keep the robot's D in the sim's <code>camera_info</code>:</strong> impossible and rejected. A <code>camera_info</code> that claims distortion over a pinhole image misleads every consumer.</li>
+<li><strong>CSI intrinsics from <code>jetson_camera</code>'s <code>raspicam_v2.yaml</code>:</strong> rejected after checking what the robot loads. The robot passes no calibration URL, so <code>jetson_camera</code> loads <code>~/.ros/camera_info/camera.yaml</code>, which is the Pilsbot's own calibration (<code>jetson_camera/camera_info/camera.yaml</code>, 2020). <code>raspicam_v2.yaml</code> is upstream's sample. The sim uses <code>camera.yaml</code> scaled to 1280×720: HFOV 0.71489 rad.</li>
+<li><strong>Generate the city from the Classic template:</strong> rejected. Almost every helper in it emits Classic constructs that changed, and it picked the parked cars at random on every run.</li>
+<li><strong>Only the full city:</strong> rejected. It misses the 0.2 target with all cameras; the block passes it.</li>
+</ul>
+<h2 id="consequences">Consequences</h2>
+<ul>
+<li>Milestone 2 is perception: cameras, citysim, point clouds, costmaps, and mapping (navigation#6). Full Nav2 navigation, people tracking with the CSI camera (the sim already has the walking and standing people), GNSS and <code>hardware:=kinematic</code> are later milestones.</li>
+<li>Merge order: description#11, hw_ros#20, bringup#12, #15 and #16, simulation#12 and #14, citysim#1–#4 and navigation#4, #5 and #6 are merged; this ADR is last. depthai#5 waits for the OAK test.</li>
+<li>The sim's cameras still differ from the robot's (ADR 0012 lists the rest): mono images are linear and raw, the CSI <code>camera_info</code> has D = 0, fx = fy and the principal point at the image centre (the robot's: 606.6, 391.2), depth has only <code>compressedDepth</code> (the robot publishes no compressed depth), and the CSI camera offers only <code>/compressed</code> while the robot's <code>jetson_camera</code> publishes every installed transport. <code>/camera/stereo/points</code> no longer exists.</li>
+<li>On the robot, <code>mjpeg_node</code> publishes the mono pair as JPEG only (<code>image_rect/compressed</code>), so whatever reads a raw mono image needs an image_transport <code>republish compressed raw</code> for that camera: <code>cloud:=stereo</code> and <code>mapping.launch.py input:=stereo</code> for both, <code>input:=depth</code> for the left one (both mapping inputs read the left image raw; without it rtabmap builds no map), <code>cloud:=depth</code> for none. <code>cloud:=depth</code> and <code>input:=depth</code> need <code>mjpeg_node</code> with <code>enable_depth:=true</code>. All of them need depthai#5.</li>
+<li>Not verified on the robot: that the Nano has <code>~/.ros/camera_info/camera.yaml</code> (without it the CSI <code>camera_info</code> is uncalibrated), and that <code>camera.yaml</code>, calibrated at 1080p, holds for the 1280×720 capture mode.</li>
+<li>New bags record <code>/front_camera/image_raw/compressed</code> and <code>/front_camera/camera_info</code>. While the camera container still runs Foxy, its CSI camera publishes <code>/image_raw/compressed</code> and <code>/camera_info</code>, so those bags have no CSI stream (ADR 0010).</li>
+<li>The sim's CSI camera now renders 1280×720 instead of 848×480, and Bloom and the moving cars were added after the spike. Its real-time factors with the shipped worlds are measured only on the loaded desktop (pilsbot_simulation#15), not on an unloaded machine (citysim's worlds and plugins, above).</li>
+<li><code>stereo</code> needs texture: untextured surfaces give no points. The flat world's ground and the city's roads and sidewalks are plain colours, so the stereo cloud has no ground points there. The stereo cloud also misses a band at the left image border (+y), and the frame test target is centred for that reason.</li>
+<li><code>depth_image_proc</code> publishes best effort and <code>stereo_image_proc</code> reliable: a reliable subscriber works with <code>stereo</code> and silently gets nothing with <code>depth</code>. Tests and the costmaps (Nav2's obstacle layer) subscribe with sensor-data QoS.</li>
+<li>The costmap's minimum obstacle height is 0.1 m (the floor the camera sees from x ≈ 1.45 m on would otherwise be lethal), the local window is 8 × 8 m so that it holds the camera's marking range (the OAK at x 0.82 plus <code>obstacle_range</code> 3 m; the old 3 × 3 m ended at 1.5 m, where the OAK's view of the floor only begins), and the footprint is the robot with the steering straight ahead. The standalone costmap's topics are <code>/costmap/costmap*</code> (in a Nav2 bringup: <code>/local_costmap/local_costmap*</code>). All three are to be tuned on the robot.</li>
+<li>Fortress exits with code 0 on SDF errors, and the actor crash and stall appear only once a camera renders. citysim's load test therefore checks that <code>/stats</code> advances with a subscribed camera in the world, not the exit code.</li>
+<li>citysim's plugins find <code>ignition-gazebo6</code>, whose <code>jsoncppConfig.cmake</code> fails on CMake 4 (<code>cmake_policy(VERSION 3.0)</code>). On a desktop with CMake 4 build citysim with <code>-DCMAKE_POLICY_VERSION_MINIMUM=3.5</code> (citysim's README).</li>
+<li><strong>Resolved: the full city drives on the desktop</strong> (<a href="https://github.com/pilsbot/pilsbot_simulation/issues/15">pilsbot_simulation#15</a>; <a href="https://github.com/pilsbot/citysim/pull/1">citysim#1</a> had it as "Full city: not confirmed"). The earlier failure (4.4 m instead of about 12 m in a 12 s straight at 1.0 m/s, no <code>/odom</code> in the following 6 s turn) came from the ad-hoc drive script, not from the robot stack or the world. Before every phase the script read ground truth with a blocking <code>ign model -m pilsbot -p</code>, which takes 39 s wall time, about 2 GB RAM and a full core in the full city (1–2 s in the block). rclpy did not spin meanwhile, so the node's <code>/clock</code> time stood still, and the next phase was timed from that old time: about 6 s of sim time were gone per query, half the straight and the whole turn. The reported 23 Hz <code>/odom</code> was the straight's messages divided by 12 s, though they arrived in about 6 s. A separate monitor showed the stack fine throughout: controllers and <code>PilsbotSystem</code> active, the hardware activator never re-activating, <code>list_controllers</code> answering in 0.01 s or less, <code>/odom</code> at 50.0 messages per sim second (the controllers' 50 Hz) and <code>/joint_states</code> gaps of at most 0.020 s sim. With ground truth read from one <code>dynamic_pose/info</code> message in a thread while the node spins, the full city drives the 12 s straight like the block (10.84 m odometry, 10.88 m ground truth) at a median real-time factor of 0.17 with cameras and 0.23 with <code>cameras:=false</code> (same distances), on the 4-core desktop at load average 6–9 with full swap. Load lowers the real-time factor but does not stop the robot. No code changes followed; <code>pilsbot_simulation</code>'s citysim test drives until odometry reaches its distance, in the block, and is not affected. The Gazebo GUI and driving with the gamepad in the full city were not part of the check.</li>
+<li><strong>Right turn from the city spawn point:</strong> in both city worlds a right turn (steering +0.3 from y = −1.8) ends with ground-truth yaw −63° against −23° from odometry and 2.3 m against 3.55 m travelled, while a left turn in the block and a right turn on flat ground match. Most likely the robot runs into the right-hand curb and pivots there while the wheels turn; this is not checked with a contact sensor. It is the scenario, not a stall: <code>/odom</code> keeps arriving at 50 Hz.</li>
+<li>The Bloom GUI plugin and the TrafficLights keys from the <code>KeyPublisher</code> window are not verified: everything ran headless.</li>
+<li>Fortress logs texture lookups inside some Fuel models (house normal maps, wheel textures of the buses and hatchbacks); those textures are missing. citysim's README lists them.</li>
+<li><code>pilsbot_navigation</code>'s Gazebo tests (frame test, costmap test, mapping test) start the sim and take minutes; <code>-LE gazebo</code> or <code>PILSBOT_SKIP_GAZEBO_TESTS=1</code> skips them.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

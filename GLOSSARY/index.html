@@ -680,6 +680,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0013-camera-and-point-cloud-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -829,6 +852,15 @@ Headlight, turn signal, brake, and hazard behaviour that follows German road tra
 <p><strong>OAK</strong>:
 The OAK-D Lite camera, which provides colour, stereo depth, and on-camera neural inference.
 <em>Avoid</em>: depthai (for the device), Luxonis camera</p>
+<p><strong>CSI camera</strong>:
+The robot's second camera, on the Nano's CSI port, whose images are published as <code>front_camera</code>.
+<em>Avoid</em>: raspicam, jetson camera (for the device), front camera (for the device)</p>
+<p><strong>Point cloud pipeline</strong>:
+The chain that turns the OAK's images into the robot's point cloud, either from the OAK's own depth image (<code>depth</code>) or from its rectified mono pair matched on the host (<code>stereo</code>); both give the same output (ADR 0013).
+<em>Avoid</em>: depth cloud (for either pipeline), Gazebo point cloud</p>
+<p><strong>Frame test</strong>:
+The check that a point cloud, transformed into <code>base_footprint</code>, lies on the front face of a target at a known pose in front of the robot, neither rotated nor mirrored.
+<em>Avoid</em>: calibration test, tf test</p>
 <p><strong>Drivability map</strong>:
 A robot-local map that labels the ground ahead as drivable sidewalk, road, or not drivable.
 <em>Avoid</em>: costmap (for the semantic layer), segmentation map</p>
@@ -848,6 +880,12 @@ What sits behind the robot's <code>ros2_control</code> interfaces, chosen with t
 <p><strong>Simulation</strong>:
 Pilsbot in Gazebo Fortress, started by <code>pilsbot_simulation</code>'s <code>sim.launch.py</code>, which runs the robot's own launch path and controller config in hardware mode <code>gazebo</code> (ADR 0012).
 <em>Avoid</em>: fake hardware, Gazebo (for the whole setup)</p>
+<p><strong>citysim</strong>:
+The package with the simulation's city worlds: streets, buildings, traffic lights, moving cars and walking people, ported from Gazebo Classic. It comes as the full city and the city block (ADR 0013).
+<em>Avoid</em>: simple_city, city world (for the package)</p>
+<p><strong>City block</strong>:
+The part of citysim around the robot's spawn point, cut out so that the simulation runs faster with all cameras; the world for perception and mapping.
+<em>Avoid</em>: block world, cropped city</p>
 <h2 id="frames">Frames</h2>
 <p><strong><code>odom</code></strong>:
 The world-fixed odometry frame, whose origin is where the front axle stood when odometry was last reset.
@@ -857,6 +895,9 @@ The rear axle centre on the ground, which is the frame odometry tracks in <code>
 <em>Avoid</em>: base_link (for the tracked frame)</p>
 <p><strong><code>base_link</code></strong>:
 The rear axle centre at wheel-axle height, one wheel radius above <code>base_footprint</code>.</p>
+<p><strong>Optical frame</strong>:
+A camera's frame with z forward, x right and y down (REP 103), the frame its images and point clouds are stamped with; each camera's link frame is x-forward instead.
+<em>Avoid</em>: camera frame (unqualified)</p>
 <h2 id="data">Data</h2>
 <p><strong>Kohlfahrt</strong>:
 A real outing with the robot, usually in public.

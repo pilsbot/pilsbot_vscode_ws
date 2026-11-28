@@ -655,6 +655,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0013-camera-and-point-cloud-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -742,7 +765,7 @@
 <li>Without the SSD mounted (no marker file), nothing is recorded. The launch output shows a <code>NOT RECORDING</code> banner.</li>
 <li>Foxglove cannot publish, call services, or edit parameters by default. Its teleop and parameter panels stay inactive.</li>
 <li>Live Foxglove clients see <code>/robot_description</code> again every 10 s while recording.</li>
-<li>During the camera transition (ADR 0003) the <code>camera</code> group lists the topics of the Foxy camera container (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/7">pilsbot_bringup#7</a>): <code>/color/video/image/compressed</code>, <code>/color/video/camera_info</code>, <code>/image_raw/compressed</code>, <code>/camera_info</code>. The compressed topics exist only if <code>compressed_image_transport</code> is in the Foxy camera image, which is still to be checked on the robot with <code>ros2 topic list</code>. Their JPEG is encoded on the Nano's CPU, not by the OAK. The group changes to the Humble camera node's names when that container moves to Humble.</li>
+<li>During the camera transition (ADR 0003) the <code>camera</code> group lists the OAK topics of the Foxy camera container (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/7">pilsbot_bringup#7</a>): <code>/color/video/image/compressed</code>, <code>/color/video/camera_info</code>. The compressed topic exists only if <code>compressed_image_transport</code> is in the Foxy camera image, which is still to be checked on the robot with <code>ros2 topic list</code>. Its JPEG is encoded on the Nano's CPU, not by the OAK. The OAK entries change to the Humble camera node's names when that container moves to Humble. The CSI camera's entries already are the Humble names, <code>/front_camera/image_raw/compressed</code> and <code>/front_camera/camera_info</code> (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/12">pilsbot_bringup#12</a>, ADR 0013), so while the camera container runs Foxy (which publishes <code>/image_raw/compressed</code> and <code>/camera_info</code>) the bags have no CSI stream.</li>
 <li>New logs contain <code>/dynamic_joint_states</code> instead of <code>/hoverboard_api</code> and <code>/head_mcu</code> (ADR 0006), and <code>/rosout</code> in the <code>logs</code> group.</li>
 </ul>
 

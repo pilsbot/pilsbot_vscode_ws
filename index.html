@@ -762,6 +762,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0013-camera-and-point-cloud-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Two point cloud pipelines with one output, and the simulation's cameras carry the robot's names and frames
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1032,8 +1055,11 @@ export PILSBOT_RENDER_GID=$(getent group render | cut -d: -f3)   # access to /de
 <p>With an nvidia card, use the <code>humble-cuda-desktop</code> base named in <code>.devcontainer/desktop/Dockerfile</code> and add <code>--gpus=all</code> to the run arguments.</p>
 <pre><code>ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
 ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
+ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city, ADR 0013)
+ros2 launch pilsbot_simulation sim.launch.py cameras:=false         # no camera sensors, faster
 </code></pre>
-<p>Drive with the gamepad as on the robot, or see the <a href="https://github.com/pilsbot/pilsbot_simulation/tree/humble">pilsbot_simulation README</a> for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012.</p>
+<p>The city worlds come from <code>citysim</code> (<code>src/desktop.repos</code>) and download about 110 MB of Fuel models to <code>~/.ignition/fuel</code> on the first launch. Point clouds and the local costmap come from <code>pilsbot_navigation</code>, started next to the sim with <code>use_sim_time:=true</code>: <code>perception.launch.py cloud:=depth|stereo</code> publishes <code>/camera/points</code>, and <code>local_costmap.launch.py</code> reads it (<a href="docs/adr/0013-camera-and-point-cloud-pipeline.md">ADR 0013</a>). <code>mapping.launch.py input:=depth|stereo</code> runs rtabmap. On a desktop with CMake 4, citysim's plugins build only with <code>-DCMAKE_POLICY_VERSION_MINIMUM=3.5</code>.</p>
+<p>Drive with the gamepad as on the robot, or see the <a href="https://github.com/pilsbot/pilsbot_simulation/tree/humble">pilsbot_simulation README</a> for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012 and ADR 0013.</p>
 <p>If any issues occur during the setup process, do not hesitate to open an issue, so we can
 fix the problem as soon as possible.</p>
 <h2 id="on-the-jetson-nano">On the Jetson Nano</h2>
@@ -1142,12 +1168,12 @@ docker logs -f pilsbot-camera                          # Ctrl+C leaves it runnin
 docker stop -t 30 pilsbot-camera &amp;&amp; docker rm pilsbot-camera
 </code></pre>
 <p>Check from <code>pilsbot-humble</code> with <code>ros2 topic list</code> that the camera topics arrive. Foxy and Humble talk over DDS for these message types (ADR 0003). Both containers must use the same <code>ROS_DOMAIN_ID</code>.</p>
-<p>During the transition, the <code>camera</code> group of the Humble <code>recording.yaml</code> lists the Foxy camera topics (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/7">pilsbot_bringup#7</a>), so <code>log_kohl.launch.py</code> with the <code>camera</code> group records them from the Humble stack container:</p>
+<p>During the transition, the <code>camera</code> group of the Humble <code>recording.yaml</code> lists the Foxy OAK topics (<a href="https://github.com/pilsbot/pilsbot_bringup/pull/7">pilsbot_bringup#7</a>), so <code>log_kohl.launch.py</code> with the <code>camera</code> group records them from the Humble stack container:</p>
 <ul>
 <li><code>/color/video/image/compressed</code> and <code>/color/video/camera_info</code> (OAK)</li>
-<li><code>/image_raw/compressed</code> and <code>/camera_info</code> (CSI camera)</li>
+<li><code>/front_camera/image_raw/compressed</code> and <code>/front_camera/camera_info</code> (CSI camera, already the Humble names, <a href="docs/adr/0013-camera-and-point-cloud-pipeline.md">ADR 0013</a>). The Foxy camera container publishes <code>/image_raw/compressed</code> and <code>/camera_info</code> instead, so bags recorded during the transition have no CSI stream.</li>
 </ul>
-<p>The two <code>compressed</code> topics exist only if <code>compressed_image_transport</code> is installed in the Foxy camera image. Check on the robot, with the camera container running: <code>ros2 topic list | grep -E 'compressed|camera_info'</code> in <code>pilsbot-humble</code>. If the compressed topics are missing, the bags hold only the <code>camera_info</code> topics. The <code>compressed</code> plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the group changes to the Humble camera node's names.</p>
+<p>The <code>compressed</code> topic exists only if <code>compressed_image_transport</code> is installed in the Foxy camera image. Check on the robot, with the camera container running: <code>ros2 topic list | grep -E 'compressed|camera_info'</code> in <code>pilsbot-humble</code>. If it is missing, the bags hold only the <code>camera_info</code> topic. The <code>compressed</code> plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the OAK entries change to the Humble camera node's names.</p>
 
 
 
