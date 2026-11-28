@@ -90,7 +90,16 @@ The URDF has no default hardware mode: without `hardware:=real` or `hardware:=ga
 
 ### Simulation
 
-On the desktop, `pilsbot_simulation` runs the robot in Gazebo Fortress through the robot's own launch files and controller config, with `hardware:=gazebo` ([ADR 0012](docs/adr/0012-simulation-on-gazebo-fortress.md)). It needs `ros-humble-ros-gz` and `ros-humble-gz-ros2-control`; Gazebo Classic is not supported.
+On the desktop, `pilsbot_simulation` runs the robot in Gazebo Fortress through the robot's own launch files and controller config, with `hardware:=gazebo` ([ADR 0012](docs/adr/0012-simulation-on-gazebo-fortress.md)). It needs `ros-humble-ros-gz` and `ros-humble-gz-ros2-control`; Gazebo Classic is not supported. The desktop devcontainer ships both, from the ROS apt repo, together with the perception and mapping packages (`depth_image_proc`, `stereo_image_proc`, `rtabmap_ros`, the spatio-temporal voxel layer, compressed image transport).
+
+The devcontainer renders OpenGL in software by default, which runs the Gazebo GUI everywhere but slowly. To render on the GPU (Intel or AMD), export these on the host before opening the container, then start VS Code from that shell:
+
+```
+export LIBGL_ALWAYS_SOFTWARE=0
+export PILSBOT_RENDER_GID=$(getent group render | cut -d: -f3)   # access to /dev/dri/renderD*
+```
+
+With an nvidia card, use the `humble-cuda-desktop` base named in `.devcontainer/desktop/Dockerfile` and add `--gpus=all` to the run arguments.
 
 ```
 ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI

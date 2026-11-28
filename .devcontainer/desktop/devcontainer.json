@@ -1,6 +1,6 @@
 // See https://containers.dev/implementors/json_reference/ for format details.
 {
-	"name": "Pilsbot desktop (Humble + Gazebo)",
+	"name": "Pilsbot desktop (Humble + Gazebo Fortress)",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
@@ -22,6 +22,13 @@
 		"--volume=/tmp/.X11-unix:/tmp/.X11-unix",
 		"--volume=/run/user/1000/wayland-0:/run/user/1000/wayland-0",
 		"--volume=/dev:/dev",
+		// Hardware rendering, also headless through EGL, opens /dev/dri/renderD*, which belongs
+		// to the HOST's render group. Export its gid before opening the container:
+		//   export PILSBOT_RENDER_GID=$(getent group render | cut -d: -f3)
+		// Unset, the fallback adds the image's video group, which ros already has.
+		"--group-add=${localEnv:PILSBOT_RENDER_GID:video}",
+		// nvidia card with the humble-cuda-desktop base (see Dockerfile): add "--gpus=all"
+		// and export LIBGL_ALWAYS_SOFTWARE=0 on the host.
 		"--privileged"
 	],
 	"containerEnv": {
@@ -29,7 +36,11 @@
 		"WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
 		"XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
 		"PULSE_SERVER": "${localEnv:PULSE_SERVER}",
-		"LIBGL_ALWAYS_SOFTWARE": "1" // Needed for software rendering of opengl
+		// Software OpenGL (llvmpipe) by default, which runs Gazebo's ogre2 everywhere but slowly.
+		// For the GPU export LIBGL_ALWAYS_SOFTWARE=0 on the host (and PILSBOT_RENDER_GID, above).
+		"LIBGL_ALWAYS_SOFTWARE": "${localEnv:LIBGL_ALWAYS_SOFTWARE:1}",
+		// Qt (Gazebo GUI, rviz) over X11 without a shared IPC namespace: no MIT-SHM
+		"QT_X11_NO_MITSHM": "1"
 	},
 	"customizations": {
 		"vscode": {
