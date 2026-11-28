@@ -1023,7 +1023,13 @@ xacro $(ros2 pkg prefix pilsbot_description)/share/pilsbot_description/urdf/pils
 <p>The URDF has no default hardware mode: without <code>hardware:=real</code> or <code>hardware:=gazebo</code>, xacro stops with a message that names the argument.</p>
 <p><code>./build.sh</code> passes extra arguments to <code>colcon build</code>, e.g. <code>./build.sh --packages-select pilsbot_driver</code> or <code>./build.sh --packages-skip &lt;name&gt;</code>.</p>
 <h3 id="simulation">Simulation</h3>
-<p>On the desktop, <code>pilsbot_simulation</code> runs the robot in Gazebo Fortress through the robot's own launch files and controller config, with <code>hardware:=gazebo</code> (<a href="docs/adr/0012-simulation-on-gazebo-fortress.md">ADR 0012</a>). It needs <code>ros-humble-ros-gz</code> and <code>ros-humble-gz-ros2-control</code>; Gazebo Classic is not supported.</p>
+<p>On the desktop, <code>pilsbot_simulation</code> runs the robot in Gazebo Fortress through the robot's own launch files and controller config, with <code>hardware:=gazebo</code> (<a href="docs/adr/0012-simulation-on-gazebo-fortress.md">ADR 0012</a>). It needs <code>ros-humble-ros-gz</code> and <code>ros-humble-gz-ros2-control</code>; Gazebo Classic is not supported. The desktop devcontainer ships both, from the ROS apt repo, together with the perception and mapping packages (<code>depth_image_proc</code>, <code>stereo_image_proc</code>, <code>rtabmap_ros</code>, the spatio-temporal voxel layer, compressed image transport).</p>
+<p>The devcontainer renders OpenGL in software by default, which runs the Gazebo GUI everywhere but slowly. To render on the GPU (Intel or AMD), export these on the host before opening the container, then start VS Code from that shell (close other VS Code windows first, or the running instance keeps its old environment):</p>
+<pre><code>export LIBGL_ALWAYS_SOFTWARE=0
+export PILSBOT_RENDER_GID=$(getent group render | cut -d: -f3)   # access to /dev/dri/renderD*
+</code></pre>
+<p>If they do not reach the container, Gazebo silently stays on software rendering. Check inside the container: <code>echo $LIBGL_ALWAYS_SOFTWARE</code> must print <code>0</code>, and <code>id</code> must list the host's render gid.</p>
+<p>With an nvidia card, use the <code>humble-cuda-desktop</code> base named in <code>.devcontainer/desktop/Dockerfile</code> and add <code>--gpus=all</code> to the run arguments.</p>
 <pre><code>ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
 ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
 </code></pre>
