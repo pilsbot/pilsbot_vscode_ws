@@ -106,9 +106,13 @@ With an nvidia card, use the `humble-cuda-desktop` base named in `.devcontainer/
 ```
 ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
 ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
+ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city)
+ros2 launch pilsbot_simulation sim.launch.py cameras:=false         # no camera sensors, faster
 ```
 
-Drive with the gamepad as on the robot, or see the [pilsbot_simulation README](https://github.com/pilsbot/pilsbot_simulation/tree/humble) for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012.
+The city worlds come from `citysim` (`src/desktop.repos`) and download about 110 MB of Fuel models to `~/.ignition/fuel` on the first launch. Point clouds and the local costmap come from `pilsbot_navigation`, started next to the sim with `use_sim_time:=true`: `perception.launch.py cloud:=depth|stereo` publishes `/camera/points`, and `local_costmap.launch.py` reads it ([ADR 0013](docs/adr/0013-camera-and-point-cloud-pipeline.md)). On a desktop with CMake 4, citysim's plugins build only with `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`.
+
+Drive with the gamepad as on the robot, or see the [pilsbot_simulation README](https://github.com/pilsbot/pilsbot_simulation/tree/humble) for commands without one, Foxglove, the bridged topics and the headless drive test. The controllers become active one hardware activator period (5 s) of sim time after the launch; the sim runs below real time with the cameras on, so on the wall clock this takes longer. Odometry, frames and topics are the robot's; the remaining differences are listed in ADR 0012 and ADR 0013.
 
 If any issues occur during the setup process, do not hesitate to open an issue, so we can
 fix the problem as soon as possible.
@@ -256,9 +260,9 @@ docker stop -t 30 pilsbot-camera && docker rm pilsbot-camera
 
 Check from `pilsbot-humble` with `ros2 topic list` that the camera topics arrive. Foxy and Humble talk over DDS for these message types (ADR 0003). Both containers must use the same `ROS_DOMAIN_ID`.
 
-During the transition, the `camera` group of the Humble `recording.yaml` lists the Foxy camera topics ([pilsbot_bringup#7](https://github.com/pilsbot/pilsbot_bringup/pull/7)), so `log_kohl.launch.py` with the `camera` group records them from the Humble stack container:
+During the transition, the `camera` group of the Humble `recording.yaml` lists the Foxy OAK topics ([pilsbot_bringup#7](https://github.com/pilsbot/pilsbot_bringup/pull/7)), so `log_kohl.launch.py` with the `camera` group records them from the Humble stack container:
 
 - `/color/video/image/compressed` and `/color/video/camera_info` (OAK)
-- `/image_raw/compressed` and `/camera_info` (CSI camera)
+- `/front_camera/image_raw/compressed` and `/front_camera/camera_info` (CSI camera, already the Humble names, [ADR 0013](docs/adr/0013-camera-and-point-cloud-pipeline.md)). The Foxy camera container publishes `/image_raw/compressed` and `/camera_info` instead, so bags recorded during the transition have no CSI stream.
 
-The two `compressed` topics exist only if `compressed_image_transport` is installed in the Foxy camera image. Check on the robot, with the camera container running: `ros2 topic list | grep -E 'compressed|camera_info'` in `pilsbot-humble`. If the compressed topics are missing, the bags hold only the `camera_info` topics. The `compressed` plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the group changes to the Humble camera node's names.
+The `compressed` topic exists only if `compressed_image_transport` is installed in the Foxy camera image. Check on the robot, with the camera container running: `ros2 topic list | grep -E 'compressed|camera_info'` in `pilsbot-humble`. If it is missing, the bags hold only the `camera_info` topic. The `compressed` plugin encodes JPEG on the camera container's CPU, only while the recorder subscribes; raw images and depth are not recorded. When the camera container moves to Humble, the OAK entries change to the Humble camera node's names.

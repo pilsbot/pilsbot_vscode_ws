@@ -76,6 +76,18 @@ _Avoid_: indicators (for the whole set), LEDs
 The OAK-D Lite camera, which provides colour, stereo depth, and on-camera neural inference.
 _Avoid_: depthai (for the device), Luxonis camera
 
+**CSI camera**:
+The robot's second camera, on the Nano's CSI port, whose images are published as `front_camera`.
+_Avoid_: raspicam, jetson camera (for the device), front camera (for the device)
+
+**Point cloud pipeline**:
+The chain that turns the OAK's images into the robot's point cloud, either from the OAK's own depth image (`depth`) or from its rectified mono pair matched on the host (`stereo`); both give the same output (ADR 0013).
+_Avoid_: depth cloud (for either pipeline), Gazebo point cloud
+
+**Frame test**:
+The check that a point cloud, transformed into `base_footprint`, lies on the front face of a target at a known pose in front of the robot, neither rotated nor mirrored.
+_Avoid_: calibration test, tf test
+
 **Drivability map**:
 A robot-local map that labels the ground ahead as drivable sidewalk, road, or not drivable.
 _Avoid_: costmap (for the semantic layer), segmentation map
@@ -103,6 +115,14 @@ _Avoid_: fake hardware, mock hardware, use_fake_hardware, sim mode
 Pilsbot in Gazebo Fortress, started by `pilsbot_simulation`'s `sim.launch.py`, which runs the robot's own launch path and controller config in hardware mode `gazebo` (ADR 0012).
 _Avoid_: fake hardware, Gazebo (for the whole setup)
 
+**citysim**:
+The city world of the simulation: streets, buildings, traffic lights, moving cars and walking people, ported from Gazebo Classic. It comes as the full city and the city block (ADR 0013).
+_Avoid_: simple_city, city world (for the package)
+
+**City block**:
+The part of citysim around the robot's spawn point, cut out so that the simulation runs faster with all cameras; the world for perception and mapping.
+_Avoid_: block world, cropped city
+
 ## Frames
 
 **`odom`**:
@@ -115,6 +135,10 @@ _Avoid_: base_link (for the tracked frame)
 
 **`base_link`**:
 The rear axle centre at wheel-axle height, one wheel radius above `base_footprint`.
+
+**Optical frame**:
+A camera's frame with z forward, x right and y down (REP 103), the frame its images and point clouds are stamped with; each camera's link frame is x-forward instead.
+_Avoid_: camera frame (unqualified)
 
 ## Data
 
