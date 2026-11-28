@@ -12,8 +12,11 @@ FROM althack/ros2:humble-desktop
 # ros-humble-ros-gz), ros_gz bridge/image/sim and the ros2_control plugin.
 # Perception and mapping (simulation milestone 2, pilsbot_vscode_ws#35): image transport,
 # depth and stereo point clouds, rtabmap, the voxel layer for the costmaps.
+# The upgrade first: packages.ros.org syncs after the base tag was built, and installing on
+# top of an older sync would leave the image with ROS packages from two syncs.
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
+    && apt-get -y upgrade \
     && apt-get -y install --no-install-recommends \
         bluez \
         python3-vcstool \
