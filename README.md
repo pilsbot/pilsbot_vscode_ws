@@ -106,7 +106,7 @@ With an nvidia card, use the `humble-cuda-desktop` base named in `.devcontainer/
 ```
 ros2 launch pilsbot_simulation sim.launch.py              # with the Gazebo GUI
 ros2 launch pilsbot_simulation sim.launch.py gui:=false   # headless
-ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city)
+ros2 launch pilsbot_simulation sim.launch.py world:=citysim_block   # city block (world:=citysim: the full city, which does not drive on the desktop yet, ADR 0013)
 ros2 launch pilsbot_simulation sim.launch.py cameras:=false         # no camera sensors, faster
 ```
 

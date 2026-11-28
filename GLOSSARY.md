@@ -116,7 +116,7 @@ Pilsbot in Gazebo Fortress, started by `pilsbot_simulation`'s `sim.launch.py`, w
 _Avoid_: fake hardware, Gazebo (for the whole setup)
 
 **citysim**:
-The city world of the simulation: streets, buildings, traffic lights, moving cars and walking people, ported from Gazebo Classic. It comes as the full city and the city block (ADR 0013).
+The package with the simulation's city worlds: streets, buildings, traffic lights, moving cars and walking people, ported from Gazebo Classic. It comes as the full city and the city block (ADR 0013).
 _Avoid_: simple_city, city world (for the package)
 
 **City block**:
